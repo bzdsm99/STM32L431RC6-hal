@@ -1,0 +1,26 @@
+{
+    "recommendations": [
+        "cl.eide",
+        "dan-c-underwood.arm",
+        "ms-vscode.cpptools-extension-pack",
+        "hars.cppsnippets",
+        "ms-vscode.cmake-tools",
+        "formulahendry.code-runner",
+        "marus25.cortex-debug",
+        "mcu-debug.debug-tracker-vscode",
+        "cschlosser.doxdocgen",
+        "ms-vscode.hexeditor",
+        "keroc.hex-fmt",
+        "alibaba-cloud.tongyi-lingma",
+        "mcu-debug.memory-view",
+        "alefragnani.project-manager",
+        "ms-vscode.vscode-serial-monitor",
+        "cl.stm8-debug",
+        "mcu-debug.rtos-views",
+        "mcu-debug.peripheral-viewer",
+        "ibm.output-colorizer",
+        "xiaoyongdong.srecord",
+        "zixuanwang.linkerscript"
+    ],
+    "unwantedRecommendations": []
+}

@@ -1,0 +1,196 @@
+#include "borad.h"
+#include "delay.h"
+
+// 定义PWM模拟的分辨率
+#define PWM_RESOLUTION 100
+
+void led_init(void)
+{
+    GPIO_InitTypeDef GPIO_Init_Struct;
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+    __HAL_RCC_GPIOB_CLK_ENABLE();
+    GPIO_Init_Struct.Pin = LED_R.pin | LED_B.pin;
+    GPIO_Init_Struct.Mode = GPIO_MODE_OUTPUT_PP;
+    GPIO_Init_Struct.Speed = GPIO_SPEED_FREQ_HIGH;
+    HAL_GPIO_Init(GPIOB, &GPIO_Init_Struct);
+    GPIO_Init_Struct.Pin = LED_G.pin;
+    HAL_GPIO_Init(GPIOA, &GPIO_Init_Struct);
+    //上电默认高电平 LED共阳
+    HAL_GPIO_WritePin(GPIOA, LED_G.pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOB, LED_R.pin | LED_B.pin, GPIO_PIN_SET);
+}
+
+// LED控制函数，HIGH为熄灭，LOW为点亮（因为是共阳极）
+void led_control(struct gpio_pin led, uint8_t state) {
+    HAL_GPIO_WritePin(led.GPIOx, led.pin, state ? GPIO_PIN_SET : GPIO_PIN_RESET);
+}
+
+// PWM模拟函数，duty范围0-PWM_RESOLUTION
+void led_pwm(struct gpio_pin led, uint8_t duty) {
+    uint8_t i;
+    for(i = 0; i < PWM_RESOLUTION; i++) {
+        if(i < duty) {
+            led_control(led, 0); // 点亮LED
+        } else {
+            led_control(led, 1); // 熄灭LED
+        }
+        // 简单延时
+        for(int j = 0; j < 50; j++) {
+            __NOP();
+        }
+    }
+}
+
+// RGB565编码函数
+uint16_t rgb565_encode(uint8_t r, uint8_t g, uint8_t b) {
+    // 将8位RGB值转换为RGB565格式
+    // R: 8位转5位，右移3位
+    // G: 8位转6位，右移2位
+    // B: 8位转5位，右移3位
+    return ((r >> 3) << 11) | ((g >> 2) << 5) | (b >> 3);
+}
+
+// RGB565解码函数
+static void rgb565_decode(uint16_t rgb565, uint8_t *r, uint8_t *g, uint8_t *b) {
+    // 从RGB565值中提取RGB分量
+    *r = ((rgb565 >> 11) & 0x1F) << 3;  // 提取5位R并扩展到8位
+    *g = ((rgb565 >> 5) & 0x3F) << 2;   // 提取6位G并扩展到8位
+    *b = (rgb565 & 0x1F) << 3;          // 提取5位B并扩展到8位
+}
+
+// 使用RGB565值控制RGB LED
+void led_rgb565(uint16_t rgb565) {
+    uint8_t r, g, b;
+    
+    // 解码RGB565值
+    rgb565_decode(rgb565, &r, &g, &b);
+    
+    // 将0-255的值转换为0-100的占空比
+    // 注意: 由于是共阳极LED，值越大越暗，0为最亮，100为熄灭
+    uint8_t r_duty = 100 - (r * 100 / 255);
+    uint8_t g_duty = 100 - (g * 100 / 255);
+    uint8_t b_duty = 100 - (b * 100 / 255);
+    
+    // 使用PWM控制RGB LED
+    led_pwm(LED_R, r_duty);
+    led_pwm(LED_G, g_duty);
+    led_pwm(LED_B, b_duty);
+}
+
+//PC13上的一个LED灯
+void LED_Init()
+{
+    GPIO_InitTypeDef GPIO_Init_Struct;
+    __HAL_RCC_GPIOC_CLK_ENABLE();
+    GPIO_Init_Struct.Pin = LED.pin;
+    GPIO_Init_Struct.Mode = GPIO_MODE_OUTPUT_PP;
+    GPIO_Init_Struct.Speed = GPIO_SPEED_FREQ_HIGH;
+    HAL_GPIO_Init(GPIOC, &GPIO_Init_Struct);
+    HAL_GPIO_WritePin(GPIOC, LED.pin, GPIO_PIN_RESET);  //高电平点亮
+}
+
+
+
+void key_init(void)
+{
+    __HAL_RCC_GPIOB_CLK_ENABLE();
+    GPIO_InitTypeDef GPIO_Init_Struct;
+#if KEY_EXIT
+    GPIO_Init_Struct.Pin = KEY_1.pin | KEY_2.pin;
+    GPIO_Init_Struct.Mode = GPIO_MODE_IT_FALLING;   //下降沿触发
+    GPIO_Init_Struct.Pull = GPIO_PULLUP;
+    HAL_GPIO_Init(GPIOB, &GPIO_Init_Struct);
+    GPIO_Init_Struct.Pin = KEY_2.pin;
+    HAL_GPIO_Init(GPIOB, &GPIO_Init_Struct);    //有问题,这里必须二次调用才能上拉
+    HAL_NVIC_SetPriority(KEY1_INT_IRQn, 0, 2); //优先级
+    HAL_NVIC_EnableIRQ(KEY1_INT_IRQn);
+    HAL_NVIC_SetPriority(KEY2_INT_IRQn, 0, 2);
+    HAL_NVIC_EnableIRQ(KEY2_INT_IRQn);
+#else
+    GPIO_Init_Struct.Pin = KEY_1.pin | KEY_2.pin;
+    GPIO_Init_Struct.Mode = GPIO_MODE_INPUT;
+    GPIO_Init_Struct.Pull = GPIO_PULLUP;
+    HAL_GPIO_Init(GPIOB, &GPIO_Init_Struct);
+    GPIO_Init_Struct.Pin = KEY_1.pin;
+    HAL_GPIO_Init(GPIOB, &GPIO_Init_Struct);    //有问题,这里必须二次调用才能上拉
+#endif
+}
+
+#if KEY_EXIT
+/**
+ * @brief  KEY1外部中断服务程序
+ * @param  无
+ * @retval 无
+ */
+void EXTI3_IRQHandler(void)
+{ 
+    HAL_GPIO_EXTI_IRQHandler(KEY_1.pin);    //调用中断处理公用函数 清除KEY1所在中断线 的中断标志位，中断下半部在HAL_GPIO_EXTI_Callback执行
+    __HAL_GPIO_EXTI_CLEAR_IT(KEY_1.pin);    //HAL库默认先清中断再处理回调，退出时再清一次中断，避免按键抖动误触发
+}
+
+/**
+ * @brief  KEY2外部中断服务程序
+ * @param  无
+ * @retval 无
+ */
+void EXTI4_IRQHandler(void)
+{ 
+    HAL_GPIO_EXTI_IRQHandler(KEY_2.pin);    //调用中断处理公用函数 清除KEY1所在中断线 的中断标志位，中断下半部在HAL_GPIO_EXTI_Callback执行
+    __HAL_GPIO_EXTI_CLEAR_IT(KEY_2.pin);    //HAL库默认先清中断再处理回调，退出时再清一次中断，避免按键抖动误触发
+}
+
+/**
+ * @brief  中断服务程序中需要做的事情
+           在HAL库中所有的外部中断服务函数都会调用此函数
+ * @param  GPIO_Pin:中断引脚号
+ * @retval 无
+ */
+// void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+// {
+//     if(GPIO_Pin == KEY_1.pin)
+//     {
+//     }
+//     else if(GPIO_Pin == KEY_2.pin)
+//     {
+//     }
+// }
+#else
+/**
+ * @brief  扫描按键是否按下
+ * @param  无
+ * @note   硬件提供了消抖
+ * @retval 无
+ */
+uint8_t key_scan(void)
+{
+    if(HAL_GPIO_ReadPin(KEY_1.GPIOx, KEY_1.pin) == GPIO_PIN_RESET)
+    {
+        //delay_ms(10);   //消抖
+        if(HAL_GPIO_ReadPin(KEY_1.GPIOx, KEY_1.pin) == GPIO_PIN_RESET)
+        {
+            while(HAL_GPIO_ReadPin(KEY_1.GPIOx, KEY_1.pin) == GPIO_PIN_RESET);
+            //delay_ms(10);
+            return 1;
+        }
+    }
+    if(HAL_GPIO_ReadPin(KEY_2.GPIOx, KEY_2.pin) == GPIO_PIN_RESET)
+    {
+        //delay_ms(10);   //消抖
+        if(HAL_GPIO_ReadPin(KEY_2.GPIOx, KEY_2.pin) == GPIO_PIN_RESET)
+        {
+            while(HAL_GPIO_ReadPin(KEY_2.GPIOx, KEY_2.pin) == GPIO_PIN_RESET);
+            //delay_ms(10);
+            return 2;
+        }
+    }
+    return 0;
+}
+#endif
+
+
+
+
+
+
+
+
