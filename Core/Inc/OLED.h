@@ -1,6 +1,6 @@
 // OLED.h
-#ifndef __OLED_H__
-#define __OLED_H__
+#ifndef __OLED_H
+#define __OLED_H
 #ifdef __cplusplus
 extern "C"
 {

@@ -6,6 +6,7 @@
         "stm32l4xx_hal_conf.h": "c",
         "string.h": "c",
         "stdint.h": "c",
-        "usart.h": "c"
+        "usart.h": "c",
+        "map": "cpp"
     }
 }
