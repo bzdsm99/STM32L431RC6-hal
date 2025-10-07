@@ -1,6 +1,7 @@
 **Add rules to help the model understand your coding preferences, including preferred frameworks, coding styles, and other conventions.**
 这个项目是主要使用HAL库开发STM32L431RC6，使用的是Embedded IDE插件在VSCode进行开发。
 默认有外部高速和低速时钟，系统时钟为最高的80MHz。
+STM32L431RC6有定时器LPTIM1，LPTIM2，RTC, TIM1, TIM2, TIM6, TIM7, TIM15, TIM16
 
 用户代码在
 .\Core\Inc

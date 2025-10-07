@@ -1,22 +1,23 @@
 //timer.h
 #ifndef __TIMER_H
 #define __TIMER_H
-#include "stm32l4xx_hal.h"
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
+#include "stm32l4xx_hal.h"
 
+extern TIM_HandleTypeDef timx_Handles[13];
+extern uint8_t g_timxchy_cap_sta;    /* 输入捕获状态 */
+extern uint16_t g_timxchy_cap_val;   /* 输入捕获值 */
 
-#define BTIM_TIMX_INT                       TIM6
-#define BTIM_TIMX_INT_IRQn                  TIM6_DAC_IRQn
-#define BTIM_TIMX_INT_IRQHandler            TIM6_DAC_IRQHandler
-#define BTIM_TIMX_INT_CLK_ENABLE()          do{ __HAL_RCC_TIM6_CLK_ENABLE(); }while(0)   /* TIM6 时钟使能 */
-
-void btim_timx_int_init(uint16_t arr, uint16_t psc);
+void Timx_Init(TIM_TypeDef *Timx, uint16_t arr, uint16_t psc);
 
 #ifdef __cplusplus
 }
 #endif
 #endif // !__TIMER_H
+
+
+

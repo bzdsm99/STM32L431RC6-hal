@@ -27,11 +27,7 @@ virtualFolder:
                 - path: ../Core/Src/OLED_Data.c
                 - path: ../Core/Src/borad.c
                 - path: ../Core/Src/timer.c
-              folders:
-                - name: Timer
-                  files:
-                    - path: ../Core/Timer/timer.cpp
-                  folders: []
+              folders: []
     - name: Drivers
       files: []
       folders:
@@ -98,8 +94,8 @@ targets:
       - <virtual_root>/Application/User/Core/GPIO.c
       - <virtual_root>/Application/User/Core/main.c
       - <virtual_root>/Drivers/SYSTEM/timer.c
-      - <virtual_root>/Application/User/Core/timer.c
       - <virtual_root>/Application/User/Core/Timer/Timer.cpp
+      - <virtual_root>/Application/User/Core/Timer
     toolchain: AC5
     toolchainConfigMap:
       AC5:
