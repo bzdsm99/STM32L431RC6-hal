@@ -7,12 +7,15 @@ extern "C"
 #endif
 
 #include "stm32l4xx_hal.h"
+#include "usart.h"
 
 extern TIM_HandleTypeDef timx_Handles[13];
-extern uint8_t g_timxchy_cap_sta;    /* 输入捕获状态 */
-extern uint16_t g_timxchy_cap_val;   /* 输入捕获值 */
+// extern uint8_t g_timxchy_cap_sta;    /* 输入捕获状态 */
+// extern uint16_t g_timxchy_cap_val;   /* 输入捕获值 */
 
-void Timx_Init(TIM_TypeDef *Timx, uint16_t arr, uint16_t psc);
+void Timx_baseStart_Init(TIM_TypeDef *Timx, uint16_t arr, uint16_t psc);
+void Timx_ICStart_Init(TIM_TypeDef *Timx, uint16_t arr, uint16_t psc);
+
 
 #ifdef __cplusplus
 }

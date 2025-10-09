@@ -137,7 +137,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2V8M.DLL</Flash2>
-          <Flash3></Flash3>
+          <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -431,24 +431,14 @@
               <FilePath>..\Drivers\SYSTEM\wdg.c</FilePath>
             </File>
             <File>
+              <FileName>timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\timer.c</FilePath>
+            </File>
+            <File>
               <FileName>main.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\Core\main.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>BaseTimer.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\Core\Timer\BaseTimer.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>GeneralPurposeTimer.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\Core\Timer\GeneralPurposeTimer.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>TimerBase.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\Core\Timer\TimerBase.cpp</FilePath>
             </File>
           </Files>
         </Group>
