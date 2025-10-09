@@ -6,7 +6,7 @@ extern "C"
 #endif
 
 #include "stm32l4xx_hal.h"
-#define KEY_EXIT 1  //是否使用外部终端检测按键
+#define KEY_EXIT 1  //是否使用外部终端检测按键  0：不使用 1：使用
 
 struct gpio_pin
 {

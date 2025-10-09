@@ -57,4 +57,4 @@ dkms.conf
 # 其他无关文件夹
 Tim/
 .cursor/
-.lingma/
+# .lingma/

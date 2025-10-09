@@ -14,7 +14,7 @@ TIM_HandleTypeDef timx_Handles[13] = {0};
 void Timx_baseStart_Init(TIM_TypeDef *Timx, uint16_t arr, uint16_t psc)
 {
     uint8_t key;
-    switch ((uint32_t)Timx)
+    switch ((uint32_t)Timx) //允许所有定时器
     {
         case (uint32_t)TIM1:
             key = 1;
@@ -51,31 +51,29 @@ void Timx_ICStart_Init(TIM_TypeDef *Timx, uint16_t arr, uint16_t psc)
 {
     TIM_IC_InitTypeDef timx_ic_cap_chy = {0};
     uint8_t key;
-    switch ((uint32_t)Timx)
+    switch ((uint32_t)Timx) //允许高级定时器,通用定时器
     {
         case (uint32_t)TIM1:
             key = 1;
             break;
     }
-    
-    if(key == 1)
-    {
-        timx_Handles[key].Instance = Timx;                              /* 定时器1 */
-        timx_Handles[key].Init.Prescaler = psc;                         /* 定时器分频 */
-        timx_Handles[key].Init.CounterMode = TIM_COUNTERMODE_UP;        /* 递增计数模式 */
-        timx_Handles[key].Init.Period = arr;                            /* 自动重装载值 */
-        HAL_TIM_IC_Init(&timx_Handles[key]);
-    
-        timx_ic_cap_chy.ICPolarity = TIM_ICPOLARITY_RISING;                 /* 上升沿捕获 */
-        timx_ic_cap_chy.ICSelection = TIM_ICSELECTION_DIRECTTI;             /* 映射到TI1上 */
-        timx_ic_cap_chy.ICPrescaler = TIM_ICPSC_DIV1;                       /* 配置输入分频，不分频 */
-        timx_ic_cap_chy.ICFilter = 0;                                       /* 配置输入滤波器，不滤波 */
-        HAL_TIM_IC_ConfigChannel(&timx_Handles[key], &timx_ic_cap_chy, TIM_CHANNEL_1);  /* 配置TIM通道1 */
-    
-        __HAL_TIM_ENABLE_IT(&timx_Handles[key], TIM_IT_UPDATE);         /* 使能更新中断 */
-        //__HAL_TIM_ENABLE_IT(&timx_Handles[key], TIM_IT_CC1);            /* 使能捕获中断 */
-        HAL_TIM_IC_Start_IT(&timx_Handles[key], TIM_CHANNEL_1);     /* 开始捕获TIM5的通道1 */
-    }
+
+    timx_Handles[key].Instance = Timx;                              /* 定时器1 */
+    timx_Handles[key].Init.Prescaler = psc;                         /* 定时器分频 */
+    timx_Handles[key].Init.CounterMode = TIM_COUNTERMODE_UP;        /* 递增计数模式 */
+    timx_Handles[key].Init.Period = arr;                            /* 自动重装载值 */
+    HAL_TIM_IC_Init(&timx_Handles[key]);
+
+    timx_ic_cap_chy.ICPolarity = TIM_ICPOLARITY_RISING;                 /* 上升沿捕获 */
+    timx_ic_cap_chy.ICSelection = TIM_ICSELECTION_DIRECTTI;             /* 映射到TI1上 */
+    timx_ic_cap_chy.ICPrescaler = TIM_ICPSC_DIV1;                       /* 配置输入分频，不分频 */
+    timx_ic_cap_chy.ICFilter = 0;                                       /* 配置输入滤波器，不滤波 */
+    HAL_TIM_IC_ConfigChannel(&timx_Handles[key], &timx_ic_cap_chy, TIM_CHANNEL_1);  /* 配置TIM通道1 */
+
+    __HAL_TIM_ENABLE_IT(&timx_Handles[key], TIM_IT_UPDATE);         /* 使能更新中断 */
+    //__HAL_TIM_ENABLE_IT(&timx_Handles[key], TIM_IT_CC1);            /* 使能捕获中断 */
+    HAL_TIM_IC_Start_IT(&timx_Handles[key], TIM_CHANNEL_1);     /* 开始捕获TIM5的通道1 */
+
 }
 
 /**
@@ -103,9 +101,6 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim)
         __HAL_RCC_TIM1_CLK_ENABLE();                     /* 使能TIM时钟 */
         HAL_NVIC_SetPriority(TIM1_UP_TIM16_IRQn, 2, 3); /* 抢占1，子优先级3，组2 */
         HAL_NVIC_EnableIRQ(TIM1_UP_TIM16_IRQn);         /* 开启更新中断 */
-
-        // HAL_NVIC_SetPriority(TIM1_CC_IRQn, 2, 2);       /* 设置捕获中断优先级，抢占1，子优先级2 */
-        // HAL_NVIC_EnableIRQ(TIM1_CC_IRQn);               /* 开启捕获中断 */
     }
 }
 
