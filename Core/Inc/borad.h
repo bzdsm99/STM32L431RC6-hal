@@ -14,7 +14,7 @@ struct gpio_pin
     uint16_t pin;
 };
 
-const struct gpio_pin LED = {GPIOC, GPIO_PIN_13};   //为了支持C++
+extern const struct gpio_pin LED;   //为了支持C++
 #define LED_R ((struct gpio_pin){GPIOB, GPIO_PIN_5})
 #define LED_G ((struct gpio_pin){GPIOA, GPIO_PIN_15})
 #define LED_B ((struct gpio_pin){GPIOB, GPIO_PIN_2})

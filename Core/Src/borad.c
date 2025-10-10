@@ -4,6 +4,8 @@
 // 定义PWM模拟的分辨率
 #define PWM_RESOLUTION 100
 
+const struct gpio_pin LED = {GPIOC, GPIO_PIN_13};
+
 void led_init(void)
 {
     GPIO_InitTypeDef GPIO_Init_Struct;

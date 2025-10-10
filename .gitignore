@@ -58,3 +58,6 @@ dkms.conf
 Tim/
 .cursor/
 # .lingma/
+
+# Ignore bug-state-save branch
+refs/heads/bug-state-save

@@ -7,15 +7,31 @@ extern "C"
 #endif
 
 #include "stm32l4xx_hal.h"
-#include "usart.h"
 
-extern TIM_HandleTypeDef timx_Handles[13];
-// extern uint8_t g_timxchy_cap_sta;    /* 输入捕获状态 */
-// extern uint16_t g_timxchy_cap_val;   /* 输入捕获值 */
+
+typedef enum {
+    RTC_KEY = 0,
+    TIM1_KEY,
+    TIM2_KEY,
+    TIM6_KEY,
+    TIM7_KEY,
+    TIM15_KEY,
+    TIM16_KEY,
+    LPTIM1_KEY,
+    LPTIM2_KEY
+} TimerKey_t;
+
+
+
+extern TIM_HandleTypeDef timx_Handles[9];
+extern uint8_t g_timxchy_cap_sta;    /* 输入捕获状态 */
+extern uint16_t g_timxchy_cap_val;   /* 输入捕获值 */
+extern uint8_t num;
 
 void Timx_baseStart_Init(TIM_TypeDef *Timx, uint16_t arr, uint16_t psc);
 void Timx_ICStart_Init(TIM_TypeDef *Timx, uint16_t arr, uint16_t psc);
-
+void timx_pwmStart_init(TIM_TypeDef *Timx, uint16_t arr, uint16_t psc);
+void timx_pwmSetCompare(TIM_TypeDef *Timx,unsigned int TIM_CHANNEL_x,uint16_t pwm_vaule);
 
 #ifdef __cplusplus
 }
