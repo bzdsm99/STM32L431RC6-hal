@@ -1,7 +1,7 @@
 Dependencies for Project 'Project', Target 'Project': (DO NOT MODIFY !)
 F (startup_stm32l431xx.s)(0x68D3F07E)(--cpu Cortex-M4.fp --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__MICROLIB SETA 1"-I D:\programming\Embedded\STM32L431RCT6_HAL\MDK-ARM\RTE-I "D:\Program Files\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include"-I "D:\Program Files\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32L4xx\Include"--pd "__UVISION_VERSION SETA 518" --pd "_RTE_ SETA 1" --pd "STM32L431xx SETA 1"--list startup_stm32l431xx.lst --xref -o project\startup_stm32l431xx.o --depend project\startup_stm32l431xx.d)
-F (..\Core\Src\borad.c)(0x68DA5048)(--c99 -c --cpu Cortex-M4.fp -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I ../Drivers/CMSIS/Include -I ../Drivers/SYSTEM -I ..\Core\Timer --no-multibyte-chars-I D:\programming\Embedded\STM32L431RCT6_HAL\MDK-ARM\RTE-I "D:\Program Files\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include"-I "D:\Program Files\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32L4xx\Include"-D__UVISION_VERSION="518" -D_RTE_ -DSTM32L431xx -DUSE_HAL_DRIVER -DSTM32L431xx-o project\borad.o --omf_browse project\borad.crf --depend project\borad.d)
-I (../Core/Inc/borad.h)(0x68E08DBD)
+F (..\Core\Src\borad.c)(0x68E91476)(--c99 -c --cpu Cortex-M4.fp -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I ../Drivers/CMSIS/Include -I ../Drivers/SYSTEM -I ..\Core\Timer --no-multibyte-chars-I D:\programming\Embedded\STM32L431RCT6_HAL\MDK-ARM\RTE-I "D:\Program Files\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include"-I "D:\Program Files\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32L4xx\Include"-D__UVISION_VERSION="518" -D_RTE_ -DSTM32L431xx -DUSE_HAL_DRIVER -DSTM32L431xx-o project\borad.o --omf_browse project\borad.crf --depend project\borad.d)
+I (../Core/Inc/borad.h)(0x68E91476)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h)(0x68C0E656)
 I (../Core/Inc/stm32l4xx_hal_conf.h)(0x68DA4B9C)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h)(0x68C0E656)
@@ -302,8 +302,8 @@ I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h)(0x68C0E656)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_wwdg.h)(0x68C0E656)
 I (..\Drivers\SYSTEM\wdg.h)(0x68D95570)
 I (..\Drivers\SYSTEM\sys.h)(0x68D955F2)
-F (..\Core\Src\timer.c)(0x68E65D23)(--c99 -c --cpu Cortex-M4.fp -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I ../Drivers/CMSIS/Include -I ../Drivers/SYSTEM -I ..\Core\Timer --no-multibyte-chars-I D:\programming\Embedded\STM32L431RCT6_HAL\MDK-ARM\RTE-I "D:\Program Files\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include"-I "D:\Program Files\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32L4xx\Include"-D__UVISION_VERSION="518" -D_RTE_ -DSTM32L431xx -DUSE_HAL_DRIVER -DSTM32L431xx-o project\timer.o --omf_browse project\timer.crf --depend project\timer.d)
-I (../Core/Inc/timer.h)(0x68E65C40)
+F (..\Core\Src\timer.c)(0x68EA194A)(--c99 -c --cpu Cortex-M4.fp -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I ../Drivers/CMSIS/Include -I ../Drivers/SYSTEM -I ..\Core\Timer --no-multibyte-chars-I D:\programming\Embedded\STM32L431RCT6_HAL\MDK-ARM\RTE-I "D:\Program Files\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include"-I "D:\Program Files\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32L4xx\Include"-D__UVISION_VERSION="518" -D_RTE_ -DSTM32L431xx -DUSE_HAL_DRIVER -DSTM32L431xx-o project\timer.o --omf_browse project\timer.crf --depend project\timer.d)
+I (../Core/Inc/timer.h)(0x68EA183E)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h)(0x68C0E656)
 I (../Core/Inc/stm32l4xx_hal_conf.h)(0x68DA4B9C)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h)(0x68C0E656)
@@ -338,10 +338,8 @@ I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h)(0x68C0E656)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h)(0x68C0E656)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h)(0x68C0E656)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_wwdg.h)(0x68C0E656)
-I (../Drivers/SYSTEM/usart.h)(0x68D95634)
-I (D:\Program Files\Keil_v5\ARM\ARMCC\include\stdio.h)(0x55DB2B76)
-I (D:\Program Files\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x55DB2B76)
-F (..\Core\main.cpp)(0x68E65C58)(--cpp -c --cpu Cortex-M4.fp -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I ../Drivers/CMSIS/Include -I ../Drivers/SYSTEM -I ..\Core\Timer --no-multibyte-chars-I D:\programming\Embedded\STM32L431RCT6_HAL\MDK-ARM\RTE-I "D:\Program Files\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include"-I "D:\Program Files\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32L4xx\Include"-D__UVISION_VERSION="518" -D_RTE_ -DSTM32L431xx -DUSE_HAL_DRIVER -DSTM32L431xx-o project\main.o --omf_browse project\main.crf --depend project\main.d)
+I (../Core/Inc/borad.h)(0x68E91476)
+F (..\Core\main.cpp)(0x68EA19AF)(--cpp -c --cpu Cortex-M4.fp -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I ../Drivers/CMSIS/Include -I ../Drivers/SYSTEM -I ..\Core\Timer --no-multibyte-chars-I D:\programming\Embedded\STM32L431RCT6_HAL\MDK-ARM\RTE-I "D:\Program Files\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include"-I "D:\Program Files\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32L4xx\Include"-D__UVISION_VERSION="518" -D_RTE_ -DSTM32L431xx -DUSE_HAL_DRIVER -DSTM32L431xx-o project\main.o --omf_browse project\main.crf --depend project\main.d)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h)(0x68C0E656)
 I (../Core/Inc/stm32l4xx_hal_conf.h)(0x68DA4B9C)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h)(0x68C0E656)
@@ -376,7 +374,7 @@ I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h)(0x68C0E656)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h)(0x68C0E656)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h)(0x68C0E656)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_wwdg.h)(0x68C0E656)
-I (../Core/Inc/borad.h)(0x68E08DBD)
+I (../Core/Inc/borad.h)(0x68E91476)
 I (../Drivers/SYSTEM/delay.h)(0x68D95634)
 I (../Drivers/SYSTEM/sys.h)(0x68D955F2)
 I (../Core/Inc/OLED.h)(0x68E08DBC)
@@ -384,7 +382,7 @@ I (../Core/Inc/OLED_Data.h)(0x68D95572)
 I (../Drivers/SYSTEM/usart.h)(0x68D95634)
 I (D:\Program Files\Keil_v5\ARM\ARMCC\include\stdio.h)(0x55DB2B76)
 I (D:\Program Files\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x55DB2B76)
-I (../Core/Inc/Timer.h)(0x68E65C40)
+I (../Core/Inc/Timer.h)(0x68EA183E)
 F (../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c.c)(0x68C0E656)(--c99 -c --cpu Cortex-M4.fp -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I ../Drivers/CMSIS/Include -I ../Drivers/SYSTEM -I ..\Core\Timer --no-multibyte-chars-I D:\programming\Embedded\STM32L431RCT6_HAL\MDK-ARM\RTE-I "D:\Program Files\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include"-I "D:\Program Files\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32L4xx\Include"-D__UVISION_VERSION="518" -D_RTE_ -DSTM32L431xx -DUSE_HAL_DRIVER -DSTM32L431xx-o project\stm32l4xx_hal_i2c.o --omf_browse project\stm32l4xx_hal_i2c.crf --depend project\stm32l4xx_hal_i2c.d)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h)(0x68C0E656)
 I (../Core/Inc/stm32l4xx_hal_conf.h)(0x68DA4B9C)
