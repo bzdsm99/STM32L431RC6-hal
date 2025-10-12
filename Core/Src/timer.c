@@ -1,10 +1,13 @@
 //timer.c
 #include "timer.h"
+#include "borad.h"
+#include "usart.h"
+#include <stdarg.h>
 
-TIM_HandleTypeDef timx_Handles[9] = {0};
+
+// 定义定时器配置数组
+TimerConfig timer_configs[TIMER_KEY_COUNT] = {0};
 static uint32_t g_npwm_remain = 0;
-
-
 
 /**
   * @brief 初始化定时器的更新中断功能
@@ -45,14 +48,14 @@ void Timx_baseStart_Init(TIM_TypeDef *Timx, uint16_t arr, uint16_t psc)
             break;
     }
     
-    timx_Handles[key].Instance = Timx;
-    timx_Handles[key].Init.Prescaler = psc;                          /* 设置预分频系数 */
-    timx_Handles[key].Init.CounterMode = TIM_COUNTERMODE_UP;         /* 递增计数模式 */
-    timx_Handles[key].Init.Period = arr;
-    timx_Handles[key].Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;   /* 时钟分频 */
-    timx_Handles[key].Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE; /* 自动重装载寄存器预装载使能 */                             /* 自动装载值 */
-    HAL_TIM_Base_Init(&timx_Handles[key]);
-    HAL_TIM_Base_Start_IT(&timx_Handles[key]);    /* 使能定时器x及其更新中断 */
+    timer_configs[key].timx_Handles.Instance = Timx;
+    timer_configs[key].timx_Handles.Init.Prescaler = psc;                          /* 设置预分频系数 */
+    timer_configs[key].timx_Handles.Init.CounterMode = TIM_COUNTERMODE_UP;         /* 递增计数模式 */
+    timer_configs[key].timx_Handles.Init.Period = arr;
+    timer_configs[key].timx_Handles.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;   /* 时钟分频 */
+    timer_configs[key].timx_Handles.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE; /* 自动重装载寄存器预装载使能 */                             /* 自动装载值 */
+    HAL_TIM_Base_Init(&timer_configs[key].timx_Handles);
+    HAL_TIM_Base_Start_IT(&timer_configs[key].timx_Handles);    /* 使能定时器x及其更新中断 */
 }
 
 /**
@@ -89,17 +92,21 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim)
  *              通用定时器的时钟来自APB1,当PPRE1 ≥ 2分频的时候
  *              定时器溢出时间计算方法: Tout = ((arr + 1) * (psc + 1)) / Ft us.
  *              Ft=定时器工作频率,单位:Mhz
- *              （1000-1 , 80-1）
+ *              默认初始化为50%的占空比
  * @param       Timx: 定时器
  * @param       arr: 自动重装值
  * @param       psc: 时钟预分频数
+ * @param       channel_count: 使用的通道数量
+ * @param       可变参数列表，传入使用的通道（如 TIM_CHANNEL_1, TIM_CHANNEL_2 等）
+ * 
  * @example     arr: 1000 -1  psc: 80 -1 等于1ms
  * @retval      无
  */
-void timx_pwmStart_init(TIM_TypeDef *Timx, uint16_t arr, uint16_t psc)
+void timx_pwmStart_init(TIM_TypeDef *Timx, uint16_t arr, uint16_t psc, uint8_t channel_count, ...)
 {
     TIM_OC_InitTypeDef timx_oc_pwm_chy  = {0};  /* 定时器PWM输出配置 */
     uint8_t key;
+    va_list args;
     switch ((uint32_t)Timx) //允许高级定时器,通用定时器，低功耗定时器
     {
         case (uint32_t)TIM1:    //高级定时器
@@ -122,23 +129,35 @@ void timx_pwmStart_init(TIM_TypeDef *Timx, uint16_t arr, uint16_t psc)
             break;
     }
                            
-    timx_Handles[key].Instance = Timx;                              /* 定时器x */
-    timx_Handles[key].Init.Prescaler = psc;                         /* 定时器分频 */
-    timx_Handles[key].Init.CounterMode = TIM_COUNTERMODE_UP;        /* 递增计数模式 */
-    timx_Handles[key].Init.Period = arr;                            /* 自动重装载值 */
-    HAL_TIM_PWM_Init(&timx_Handles[key]);                           /* 初始化PWM */
+    timer_configs[key].timx_Handles.Instance = Timx;                              /* 定时器x */
+    timer_configs[key].timx_Handles.Init.Prescaler = psc;                         /* 定时器分频 */
+    timer_configs[key].timx_Handles.Init.CounterMode = TIM_COUNTERMODE_UP;        /* 递增计数模式 */
+    timer_configs[key].timx_Handles.Init.Period = arr;                            /* 自动重装载值 */
+    HAL_TIM_PWM_Init(&timer_configs[key].timx_Handles);                           /* 初始化PWM */
 
     timx_oc_pwm_chy.OCMode = TIM_OCMODE_PWM1;                           /* 模式选择PWM1 */
     timx_oc_pwm_chy.Pulse = arr / 2;                                    /* 设置比较值,此值用来确定占空比 */
-                                                                        /* 默认比较值为自动重装载值的一半,即占空比为50% */
     timx_oc_pwm_chy.OCPolarity = TIM_OCPOLARITY_LOW;                    /* 输出比较极性为低 */
-    HAL_TIM_PWM_ConfigChannel(&timx_Handles[key], &timx_oc_pwm_chy, TIM_CHANNEL_1); /* 配置TIMx通道y */
-    HAL_TIM_PWM_Start(&timx_Handles[key], TIM_CHANNEL_1);       /* 开启对应PWM通道 */
+
+    // 使用可变参数列表获取通道
+    va_start(args, channel_count);
+    for (int i = 0; i < channel_count; i++)
+    {
+        uint32_t channel = va_arg(args, uint32_t);
+
+        // 配置通道
+        HAL_TIM_PWM_ConfigChannel(&timer_configs[key].timx_Handles, &timx_oc_pwm_chy, channel);
+
+        // 启动 PWM 输出
+        HAL_TIM_PWM_Start(&timer_configs[key].timx_Handles, channel);
+    }
+    va_end(args);
 }
 
 /**
   * @brief  修改Timx通道channel_y的捕获比较寄存器的值
   * @note   基本定时器没有该寄存器
+  *         请在HAL_TIM_PWM_MspInit中设定引脚或重映射引脚
   * @param  Timx: 定时器
   * @param  TIM_CHANNEL_y: 通道
   * @param  pwm_vaule: 定时器的比较值
@@ -168,7 +187,7 @@ void timx_pwmSetCompare(TIM_TypeDef *Timx,unsigned int TIM_CHANNEL_y,uint16_t pw
             key = LPTIM2_KEY;
             break;
     }
-    __HAL_TIM_SetCompare(&timx_Handles[key], TIM_CHANNEL_y, pwm_vaule);
+    __HAL_TIM_SetCompare(&timer_configs[key].timx_Handles, TIM_CHANNEL_y, pwm_vaule);
 }
 
 
@@ -191,13 +210,13 @@ void atim1_npwmStart_init(uint16_t arr, uint16_t psc)
     __HAL_RCC_GPIOA_CLK_ENABLE();  /* TIM1 通道IO口时钟使能 */
     __HAL_RCC_TIM1_CLK_ENABLE();       /* TIM1 时钟使能 */
 
-    timx_Handles[TIM1_KEY].Instance = TIM1;                            /* 定时器 */
-    timx_Handles[TIM1_KEY].Init.Prescaler = psc;                       /* 定时器分频 */
-    timx_Handles[TIM1_KEY].Init.CounterMode = TIM_COUNTERMODE_UP;      /* 递增计数模式 */
-    timx_Handles[TIM1_KEY].Init.Period = arr;                          /* 自动重装载值 */
-    timx_Handles[TIM1_KEY].Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE; /*使能TIMx_ARR进行缓冲 */
-    timx_Handles[TIM1_KEY].Init.RepetitionCounter = 0;                 /* 重复计数器初始值 */
-    HAL_TIM_PWM_Init(&timx_Handles[TIM1_KEY]);                         /* 初始化PWM */
+    timer_configs[TIM1_KEY].timx_Handles.Instance = TIM1;                            /* 定时器 */
+    timer_configs[TIM1_KEY].timx_Handles.Init.Prescaler = psc;                       /* 定时器分频 */
+    timer_configs[TIM1_KEY].timx_Handles.Init.CounterMode = TIM_COUNTERMODE_UP;      /* 递增计数模式 */
+    timer_configs[TIM1_KEY].timx_Handles.Init.Period = arr;                          /* 自动重装载值 */
+    timer_configs[TIM1_KEY].timx_Handles.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE; /*使能TIMx_ARR进行缓冲 */
+    timer_configs[TIM1_KEY].timx_Handles.Init.RepetitionCounter = 0;                 /* 重复计数器初始值 */
+    HAL_TIM_PWM_Init(&timer_configs[TIM1_KEY].timx_Handles);                         /* 初始化PWM */
 
     gpio_init_struct.Pin = GPIO_PIN_8;                                 /* 通道y的CPIO口 */
     gpio_init_struct.Mode = GPIO_MODE_AF_PP;                           /* 复用推完输出 */
@@ -210,13 +229,13 @@ void atim1_npwmStart_init(uint16_t arr, uint16_t psc)
     timx_oc_npwm_chy.Pulse = arr / 2;                                  /* 设置比较值,此值用来确定占空比 */
                                                                        /* 这里默认设置比较值为自动重装载值的一半,即占空比为50% */
     timx_oc_npwm_chy.OCPolarity = TIM_OCPOLARITY_HIGH;                 /* 输出比较极性为高 */
-    HAL_TIM_PWM_ConfigChannel(&timx_Handles[TIM1_KEY], &timx_oc_npwm_chy, TIM_CHANNEL_1); /* 配置TIM1通道y */
+    HAL_TIM_PWM_ConfigChannel(&timer_configs[TIM1_KEY].timx_Handles, &timx_oc_npwm_chy, TIM_CHANNEL_1); /* 配置TIM1通道y */
 
     HAL_NVIC_SetPriority(TIM1_UP_TIM16_IRQn, 1, 3);                   /* 设置中断优先级，抢占优先级1，子优先级3 */
     HAL_NVIC_EnableIRQ(TIM1_UP_TIM16_IRQn);                           /* 开启TIM1中断 */
 
-    __HAL_TIM_ENABLE_IT(&timx_Handles[TIM1_KEY], TIM_IT_UPDATE);       /* 允许更新中断 */
-    HAL_TIM_PWM_Start(&timx_Handles[TIM1_KEY], TIM_CHANNEL_1);    /* 开启对应PWM通道 */
+    __HAL_TIM_ENABLE_IT(&timer_configs[TIM1_KEY].timx_Handles, TIM_IT_UPDATE);       /* 允许更新中断 */
+    HAL_TIM_PWM_Start(&timer_configs[TIM1_KEY].timx_Handles, TIM_CHANNEL_1);    /* 开启对应PWM通道 */
     
 }
 
@@ -230,8 +249,8 @@ void atim1_npwm_chy_set(uint32_t npwm)
     if (npwm == 0) return;
 
     g_npwm_remain = npwm;                                                   /* 保存脉冲个数 */
-    HAL_TIM_GenerateEvent(&timx_Handles[TIM1_KEY], TIM_EVENTSOURCE_UPDATE); /* 产生一次更新事件,在中断里面处理脉冲输出 */
-    __HAL_TIM_ENABLE(&timx_Handles[TIM1_KEY]);                              /* 使能定时器TIMX */
+    HAL_TIM_GenerateEvent(&timer_configs[TIM1_KEY].timx_Handles, TIM_EVENTSOURCE_UPDATE); /* 产生一次更新事件,在中断里面处理脉冲输出 */
+    __HAL_TIM_ENABLE(&timer_configs[TIM1_KEY].timx_Handles);                              /* 使能定时器TIMX */
 }
 
 /**
@@ -271,16 +290,23 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim)
 }
 
 /**
-  * @brief 初始化定时器的输入捕获功能
-  * @param       Timx:定时器
-  * @note  高级定时器,通用定时器可使用,每次记一次数就是1us
-  * @retval 无
-  */
-void Timx_ICStart_Init(TIM_TypeDef *Timx)
+  * @brief      初始化定时器的输入捕获功能
+  * @param      Timx: 定时器
+  * @param      channel_count: 使用的通道数量
+  * @param      可变参数列表，传入使用的通道（如 TIM_CHANNEL_1, TIM_CHANNEL_2 等）
+  * @note       TIM1 Channel1:PA8 Channel2:PA9
+  *             请到 HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
+  *             中实现对应通道的处理逻辑
+  * @retval     无
+  * @example    Timx_ICStart_Init(TIM1, 2, TIM_CHANNEL_1, TIM_CHANNEL_2); // 初始化 TIM1 的通道 1 和通道 2
+*/
+void Timx_ICStart_Init(TIM_TypeDef *Timx, uint8_t channel_count, ...)
 {
     TIM_IC_InitTypeDef timx_ic_cap_chy = {0};
     uint8_t key;
-    switch ((uint32_t)Timx) //允许高级定时器,通用定时器
+    va_list args;
+    //允许高级定时器,通用定时器
+    switch ((uint32_t)Timx)
     {
         case (uint32_t)TIM1:    //高级定时器
             key = TIM1_KEY;
@@ -295,22 +321,68 @@ void Timx_ICStart_Init(TIM_TypeDef *Timx)
             key = TIM16_KEY;
             break;
     }
-
-    timx_Handles[key].Instance = Timx;                                  /* 定时器1 */
-    timx_Handles[key].Init.Prescaler = 80-1;                            /* 定时器分频 */
-    timx_Handles[key].Init.CounterMode = TIM_COUNTERMODE_UP;            /* 递增计数模式 */
-    timx_Handles[key].Init.Period = 0xFFFF;                            /* 自动重装载值 */
-    HAL_TIM_IC_Init(&timx_Handles[key]);
-
+     // 初始化定时器
+    timer_configs[key].timx_Handles.Instance = Timx;                                  /* 定时器1 */
+    timer_configs[key].timx_Handles.Init.Prescaler = 80-1;                            /* 定时器分频 */
+    timer_configs[key].timx_Handles.Init.CounterMode = TIM_COUNTERMODE_UP;            /* 递增计数模式 */
+    timer_configs[key].timx_Handles.Init.Period = 0xFFFF;                            /* 自动重装载值 */
+    
+    // 配置输入捕获参数
     timx_ic_cap_chy.ICPolarity = TIM_ICPOLARITY_RISING;                 /* 上升沿捕获 */
     timx_ic_cap_chy.ICSelection = TIM_ICSELECTION_DIRECTTI;             /* 映射到TI1上 */
     timx_ic_cap_chy.ICPrescaler = TIM_ICPSC_DIV1;                       /* 配置输入分频，不分频 */
     timx_ic_cap_chy.ICFilter = 0;                                       /* 配置输入滤波器，不滤波 */
-    HAL_TIM_IC_ConfigChannel(&timx_Handles[key], &timx_ic_cap_chy, TIM_CHANNEL_1);  /* 配置TIM通道1 */
 
-    __HAL_TIM_ENABLE_IT(&timx_Handles[key], TIM_IT_UPDATE);         /* 使能更新中断 */
-    __HAL_TIM_ENABLE_IT(&timx_Handles[key], TIM_IT_CC1);            /* 使能捕获中断 */
-    HAL_TIM_IC_Start_IT(&timx_Handles[key], TIM_CHANNEL_1);     /* 开始捕获TIM5的通道1 */
+    __HAL_TIM_ENABLE_IT(&timer_configs[key].timx_Handles, TIM_IT_UPDATE);         /* 使能更新中断 */
+
+    // 使用可变参数列表获取通道
+    va_start(args, channel_count);
+    for (uint8_t i = 0; i < channel_count; i++)
+    {
+        uint32_t channel = va_arg(args, uint32_t);
+        // 存储通道到全局数组
+        if (i < __TIMx_IC_MAX_CHANNLES) // 最大支持 __TIMx_IC_MAX_CHANNLES 个通道
+        {
+            timer_configs[key].channels[i] = (uint16_t)channel + 1;   //防止通道一初始化值相同
+            printf("channel + 1 : %d\r\n",timer_configs[key].channels[i]);
+        }
+    }
+    va_end(args);
+
+    HAL_TIM_IC_Init(&timer_configs[key].timx_Handles);      //要等timer_configs赋值完成才能调用回调函数
+    
+    // 使用可变参数列表获取通道
+    va_start(args, channel_count);
+    for (uint8_t i = 0; i < channel_count; i++)
+    {
+        uint32_t channel = va_arg(args, uint32_t);
+
+        // 配置通道
+        HAL_TIM_IC_ConfigChannel(&timer_configs[key].timx_Handles, &timx_ic_cap_chy, channel);
+
+        // 使能对应通道的捕获中断
+        switch (channel)
+        {
+            case TIM_CHANNEL_1:
+                __HAL_TIM_ENABLE_IT(&timer_configs[key].timx_Handles, TIM_IT_CC1);
+                break;
+            case TIM_CHANNEL_2:
+                __HAL_TIM_ENABLE_IT(&timer_configs[key].timx_Handles, TIM_IT_CC2);
+                break;
+            case TIM_CHANNEL_3:
+                __HAL_TIM_ENABLE_IT(&timer_configs[key].timx_Handles, TIM_IT_CC3);
+                break;
+            case TIM_CHANNEL_4:
+                __HAL_TIM_ENABLE_IT(&timer_configs[key].timx_Handles, TIM_IT_CC4);
+                break;
+            default:
+                break; // 忽略无效通道
+        }
+
+        // 启动捕获
+        HAL_TIM_IC_Start_IT(&timer_configs[key].timx_Handles, channel);
+    }
+    va_end(args);
 }
 
 
@@ -328,13 +400,32 @@ void HAL_TIM_IC_MspInit(TIM_HandleTypeDef *htim)
         __HAL_RCC_TIM1_CLK_ENABLE();                     /* 使能TIM时钟 */
         __HAL_RCC_GPIOA_CLK_ENABLE();                    /* 开启捕获IO时钟 */
 
-        GPIO_InitStruct.Pin = GPIO_PIN_8;
         GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
         GPIO_InitStruct.Pull = GPIO_PULLDOWN;
         GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;       /* 高速 */
         GPIO_InitStruct.Alternate = GPIO_AF1_TIM1;       /* 设置为TIM1复用功能 */
-        HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
+        for(uint8_t i = 0; i < __TIMx_IC_MAX_CHANNLES && timer_configs[TIM1_KEY].channels[i] != 0; i++)
+        {
+            switch (timer_configs[TIM1_KEY].channels[i]-1)
+            {
+                case TIM_CHANNEL_1:
+                    GPIO_InitStruct.Pin = GPIO_PIN_8; // PA8 对应 TIM1_CH1
+                    break;
+                case TIM_CHANNEL_2:
+                    GPIO_InitStruct.Pin = GPIO_PIN_9; // PA9 对应 TIM1_CH2
+                    break;
+                case TIM_CHANNEL_3:
+                    GPIO_InitStruct.Pin = GPIO_PIN_10; // PA10 对应 TIM1_CH3
+                    break;
+                case TIM_CHANNEL_4:
+                    GPIO_InitStruct.Pin = GPIO_PIN_11; // PA11 对应 TIM1_CH4
+                    break;
+                default:
+                    continue; // 忽略无效通道
+            }
+            HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+        }
+        
         HAL_NVIC_SetPriority(TIM1_CC_IRQn, 2, 3);
         HAL_NVIC_EnableIRQ(TIM1_CC_IRQn);         /* 开启ITM3中断 */
 
@@ -382,30 +473,37 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 {
     if (htim->Instance == TIM1)
     {
-        uint16_t capture_value = HAL_TIM_ReadCapturedValue(&timx_Handles[1], TIM_CHANNEL_1);
-        if ((g_timxchy_cap_sta & 0X80) == 0)                /* 还未成功捕获 */
+        if (__HAL_TIM_GET_FLAG(htim, TIM_FLAG_CC1) == RESET)
         {
-            if (g_timxchy_cap_sta & 0X40)                   /* 捕获到一个下降沿 */
+            uint16_t capture_value = HAL_TIM_ReadCapturedValue(&timer_configs[TIM1_KEY].timx_Handles, TIM_CHANNEL_1);
+            if ((g_timxchy_cap_sta & 0X80) == 0)                /* 还未成功捕获 */
             {
-                g_timxchy_cap_sta |= 0X80;                  /* 标记成功捕获到一次高电平脉宽 */
-                
-                g_timxchy_cap_val = capture_value;  /* 获取当前的捕获值 */
-                
-                TIM_RESET_CAPTUREPOLARITY(&timx_Handles[1], TIM_CHANNEL_1);                      /* 一定要先清除原来的设置 */
-                TIM_SET_CAPTUREPOLARITY(&timx_Handles[1], TIM_CHANNEL_1, TIM_ICPOLARITY_RISING); /* 配置通道1上升沿捕获 */
+                if (g_timxchy_cap_sta & 0X40)                   /* 捕获到一个下降沿 */
+                {
+                    g_timxchy_cap_sta |= 0X80;                  /* 标记成功捕获到一次高电平脉宽 */
+                    
+                    g_timxchy_cap_val = capture_value;  /* 获取当前的捕获值 */
+                    
+                    TIM_RESET_CAPTUREPOLARITY(&timer_configs[TIM1_KEY].timx_Handles, TIM_CHANNEL_1);                      /* 一定要先清除原来的设置 */
+                    TIM_SET_CAPTUREPOLARITY(&timer_configs[TIM1_KEY].timx_Handles, TIM_CHANNEL_1, TIM_ICPOLARITY_RISING); /* 配置通道1上升沿捕获 */
+                }
+                else /*第一次捕获到上升沿 */
+                {
+                    g_timxchy_cap_sta = 0;                              /* 清空 */
+                    g_timxchy_cap_val = 0;
+                    g_timxchy_cap_sta |= 0X40;                          /* 标记捕获到了上升沿 */
+                    __HAL_TIM_DISABLE(&timer_configs[TIM1_KEY].timx_Handles);          /* 关闭定时器 */
+                    __HAL_TIM_SET_COUNTER(&timer_configs[TIM1_KEY].timx_Handles, 0);   /* 定时器5计数器清零 */
+                    TIM_RESET_CAPTUREPOLARITY(&timer_configs[TIM1_KEY].timx_Handles, TIM_CHANNEL_1);   /* 一定要先清除原来的设置！！ */
+                    TIM_SET_CAPTUREPOLARITY(&timer_configs[TIM1_KEY].timx_Handles, TIM_CHANNEL_1, TIM_ICPOLARITY_FALLING); /* 通道1设置为下降沿捕获 */
+                    __HAL_TIM_ENABLE(&timer_configs[TIM1_KEY].timx_Handles);           /* 使能定时器 */
+                }
             }
-            else /*第一次捕获到上升沿 */
-            {
-                g_timxchy_cap_sta = 0;                              /* 清空 */
-                g_timxchy_cap_val = 0;
-                g_timxchy_cap_sta |= 0X40;                          /* 标记捕获到了上升沿 */
-                __HAL_TIM_DISABLE(&timx_Handles[1]);          /* 关闭定时器 */
-                __HAL_TIM_SET_COUNTER(&timx_Handles[1], 0);   /* 定时器5计数器清零 */
-                TIM_RESET_CAPTUREPOLARITY(&timx_Handles[1], TIM_CHANNEL_1);   /* 一定要先清除原来的设置！！ */
-                TIM_SET_CAPTUREPOLARITY(&timx_Handles[1], TIM_CHANNEL_1, TIM_ICPOLARITY_FALLING); /* 通道1设置为下降沿捕获 */
-                __HAL_TIM_ENABLE(&timx_Handles[1]);           /* 使能定时器 */
-            }
-        } 
+        }
+        if(__HAL_TIM_GET_FLAG(htim, TIM_FLAG_CC2) == RESET)
+        {
+            //HAL_GPIO_TogglePin(LED.GPIOx,LED.pin);
+        }
     }
 }
 
@@ -421,7 +519,7 @@ void TIM1_UP_TIM16_IRQHandler(void)
     #ifdef TIM1_NPWM_USE
         uint16_t npwm = 0;
         /* 以下代码没有使用定时器HAL库共用处理函数来处理，而是直接通过判断中断标志位的方式 */
-        if(__HAL_TIM_GET_FLAG(&timx_Handles[1], TIM_FLAG_UPDATE) != RESET)
+        if(__HAL_TIM_GET_FLAG(&timer_configs[TIM1_KEY].timx_Handles, TIM_FLAG_UPDATE) != RESET)
         {
             if (g_npwm_remain >= 256)           /* 还有大于256个脉冲需要发送 */
             {
@@ -437,18 +535,18 @@ void TIM1_UP_TIM16_IRQHandler(void)
             if (npwm) /* 有脉冲要发送 */
             {
                 TIM1->RCR = npwm - 1;                                         /* 设置重复计数寄存器值为npwm-1, 即npwm个脉冲 */
-                HAL_TIM_GenerateEvent(&timx_Handles[1], TIM_EVENTSOURCE_UPDATE); /* 产生一次更新事件,在中断里面处理脉冲输出 */
-                __HAL_TIM_ENABLE(&timx_Handles[1]);                              /* 使能定时器TIMX */
+                HAL_TIM_GenerateEvent(&timer_configs[TIM1_KEY].timx_Handles, TIM_EVENTSOURCE_UPDATE); /* 产生一次更新事件,在中断里面处理脉冲输出 */
+                __HAL_TIM_ENABLE(&timer_configs[TIM1_KEY].timx_Handles);                              /* 使能定时器TIMX */
             }
             else
             {
                 TIM1->CR1 &= ~(1 << 0); /* 关闭定时器TIMX，使用HAL Disable会清除PWM通道信息，此处不用 */
             }
 
-            __HAL_TIM_CLEAR_IT(&timx_Handles[1], TIM_IT_UPDATE);  /* 清除定时器溢出中断标志位 */
+            __HAL_TIM_CLEAR_IT(&timer_configs[TIM1_KEY].timx_Handles, TIM_IT_UPDATE);  /* 清除定时器溢出中断标志位 */
         }
     #else
-        HAL_TIM_IRQHandler(&timx_Handles[1]); /* 定时器中断公共处理函数 */
+        HAL_TIM_IRQHandler(&timer_configs[TIM1_KEY].timx_Handles); /* 定时器中断公共处理函数 */
     #endif
 }
 
@@ -459,7 +557,7 @@ void TIM1_UP_TIM16_IRQHandler(void)
  */
 void TIM1_CC_IRQHandler(void)
 {
-    HAL_TIM_IRQHandler(&timx_Handles[1]); /* 定时器中断公共处理函数 */
+    HAL_TIM_IRQHandler(&timer_configs[TIM1_KEY].timx_Handles); /* 定时器中断公共处理函数 */
 }
 
 /**
@@ -469,7 +567,7 @@ void TIM1_CC_IRQHandler(void)
  */
 void TIM6_DAC_IRQHandler(void)
 {
-    HAL_TIM_IRQHandler(&timx_Handles[6]); /* 定时器中断公共处理函数 */
+    HAL_TIM_IRQHandler(&timer_configs[TIM6_KEY].timx_Handles); /* 定时器中断公共处理函数 */
 }
 
 /**
@@ -479,11 +577,11 @@ void TIM6_DAC_IRQHandler(void)
  */
 void TIM7_IRQHandler(void)
 {
-    HAL_TIM_IRQHandler(&timx_Handles[7]); /* 定时器中断公共处理函数 */
+    HAL_TIM_IRQHandler(&timer_configs[TIM7_KEY].timx_Handles); /* 定时器中断公共处理函数 */
 }
 
 
-#include "borad.h"
+
 
 
 /**
@@ -501,8 +599,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
             {
                 if ((g_timxchy_cap_sta & 0X3F) == 0X3F) /* 高电平太长了 */
                 {
-                    TIM_RESET_CAPTUREPOLARITY(&timx_Handles[1], TIM_CHANNEL_1);                     /* 一定要先清除原来的设置 */
-                    TIM_SET_CAPTUREPOLARITY(&timx_Handles[1], TIM_CHANNEL_1, TIM_ICPOLARITY_RISING);/* 配置TIM5通道1上升沿捕获 */
+                    TIM_RESET_CAPTUREPOLARITY(&timer_configs[TIM1_KEY].timx_Handles, TIM_CHANNEL_1);                     /* 一定要先清除原来的设置 */
+                    TIM_SET_CAPTUREPOLARITY(&timer_configs[TIM1_KEY].timx_Handles, TIM_CHANNEL_1, TIM_ICPOLARITY_RISING);/* 配置TIM5通道1上升沿捕获 */
                     g_timxchy_cap_sta |= 0X80;          /* 标记成功捕获了一次 */
                     g_timxchy_cap_val = 0XFFFF;
                 }

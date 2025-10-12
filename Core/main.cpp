@@ -21,10 +21,12 @@ int main(void)
     LED_Init();
     usart_init(115200);
     // timx_pwmStart_init(TIM1,5000-1,80-1);
-    timx_pwmStart_init(TIM2,5000-1, 80-1);
+    timx_pwmStart_init(TIM2,5000-1, 80-1,2,TIM_CHANNEL_1,TIM_CHANNEL_2);
     // atim1_npwmStart_init(5000-1 , 80-1);
-    Timx_ICStart_Init(TIM1);
 
+    TIM1Channel1_ICStart_Init();
+    //Tim1_ICStart_Init();
+    
     printf("test start...\r\n");
 
     tick_time = HAL_GetTick();  // 初始化时间为系统启动时间

@@ -8,6 +8,7 @@
         "stdint.h": "c",
         "usart.h": "c",
         "map": "cpp",
-        "timer.h": "c"
+        "timer.h": "c",
+        "stdarg.h": "c"
     }
 }
