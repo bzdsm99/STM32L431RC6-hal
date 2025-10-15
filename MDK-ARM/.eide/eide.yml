@@ -23,14 +23,14 @@ virtualFolder:
               files:
                 - path: ../Core/Src/stm32l4xx_it.c
                 - path: ../Core/Src/stm32l4xx_hal_msp.c
-                - path: ../Core/Src/OLED.c
-                - path: ../Core/Src/OLED_Data.c
                 - path: ../Core/Src/borad.c
                 - path: ../Core/Src/timer.c
               folders: []
             - name: Hardware
               files:
                 - path: ../Hardware/Src/Matrix_keyboard.c
+                - path: ../Hardware/Src/OLED.c
+                - path: ../Hardware/Src/OLED_Data.c
               folders: []
     - name: Drivers
       files: []

@@ -332,7 +332,7 @@
               <MiscControls>--no-multibyte-chars</MiscControls>
               <Define>USE_HAL_DRIVER,STM32L431xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32L4xx_HAL_Driver/Inc;../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32L4xx/Include;../Drivers/CMSIS/Include;../Drivers/SYSTEM;..\Core\Timer</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32L4xx_HAL_Driver/Inc;../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32L4xx/Include;../Drivers/CMSIS/Include;../Drivers/SYSTEM;..\Core\Timer;..\Hardware\lnc;..\Hardware\Src</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -391,16 +391,6 @@
               <FilePath>..\Core\Src\borad.c</FilePath>
             </File>
             <File>
-              <FileName>OLED.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\OLED.c</FilePath>
-            </File>
-            <File>
-              <FileName>OLED_Data.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\OLED_Data.c</FilePath>
-            </File>
-            <File>
               <FileName>sys.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Drivers\SYSTEM\sys.c</FilePath>
@@ -416,14 +406,14 @@
               <FilePath>..\Drivers\SYSTEM\usart.c</FilePath>
             </File>
             <File>
-              <FileName>stm32l4xx_it.c</FileName>
+              <FileName>OLED.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../Core/Src/stm32l4xx_it.c</FilePath>
+              <FilePath>..\Hardware\Src\OLED.c</FilePath>
             </File>
             <File>
-              <FileName>stm32l4xx_hal_msp.c</FileName>
+              <FileName>OLED_Data.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../Core/Src/stm32l4xx_hal_msp.c</FilePath>
+              <FilePath>..\Hardware\Src\OLED_Data.c</FilePath>
             </File>
             <File>
               <FileName>wdg.c</FileName>
@@ -436,9 +426,24 @@
               <FilePath>..\Core\Src\timer.c</FilePath>
             </File>
             <File>
+              <FileName>Matrix_keyboard.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\Src\Matrix_keyboard.c</FilePath>
+            </File>
+            <File>
               <FileName>main.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\Core\main.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>stm32l4xx_hal_msp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Core/Src/stm32l4xx_hal_msp.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32l4xx_it.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Core/Src/stm32l4xx_it.c</FilePath>
             </File>
           </Files>
         </Group>
