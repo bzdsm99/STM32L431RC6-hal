@@ -5,9 +5,9 @@
 #include "OLED.h"
 #include "usart.h"
 #include "Timer.h"
-
-static uint16_t duty = 0;       // 初始占空比
-static int16_t direction;    // 增加方向标志：1 表示增加，-1 表示减少
+#include "Matrix_keyboard.h"
+uint8_t key_char = 0;
+uint16_t led_status = 0;    //RGB565
 
 int main(void)
 {
@@ -20,33 +20,44 @@ int main(void)
     led_init();
     LED_Init();
     usart_init(115200);
-    // timx_pwmStart_init(TIM1,5000-1,80-1);
-    timx_pwmStart_init(TIM2,5000-1, 80-1,2,TIM_CHANNEL_1,TIM_CHANNEL_2);
-    // atim1_npwmStart_init(5000-1 , 80-1);
+    Matrix_keyboard_init();
 
-    TIM1Channel1_ICStart_Init();
-    //Tim1_ICStart_Init();
-    
     printf("test start...\r\n");
-
     tick_time = HAL_GetTick();  // 初始化时间为系统启动时间
-
     while (1)
     {
         elapsed_time = HAL_GetTick() - tick_time;  // 计算经过的时间
         OLED_ShowNum(4,1,elapsed_time,12);
-        //OLED_ShowNum(2,1,HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_8),1);
-        //printf("TIM1 Counter Value: %lu\r\n", TIM1->CNT); // 打印计数器值
-        OLED_ShowNum(1,1,Timx_ICHighTime(),8);
-        timx_pwmSetCompare(TIM2,TIM_CHANNEL_1,duty);
-        // 更新 duty 值
-        duty += direction;
-        // 检查边界条件并改变方向
-        if (duty >= 5000) {
-            direction = -200;  // 开始减少
-        } else if (duty <= 0) {
-            direction = 200;   // 开始增加
+
+        OLED_ShowString(1,1, "you press key:");
+        key_char = Matrix_keyboard_scan();
+        if(key_char != 0)
+        {
+            OLED_ShowChar(2,1,key_char);
         }
+
+        //如果按下的是'1'键，就切换红色LED的状态
+        if(key_char == '1')
+        {
+            led_status ^= 0xF100;
+        }
+        else if(key_char == '2')
+        {
+            led_status = 0x07E0;
+        }
+        else if(key_char == '3')
+        {
+            led_status = 0x001F;
+        }
+        else if(key_char == '4')
+        {
+            led_status = 0xFFFF;
+        }
+        else if(key_char == '5')
+        {
+            led_status = 0;
+        }
+        led_rgb565(led_status);
     }
 }
 

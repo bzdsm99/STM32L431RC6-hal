@@ -28,6 +28,10 @@ virtualFolder:
                 - path: ../Core/Src/borad.c
                 - path: ../Core/Src/timer.c
               folders: []
+            - name: Hardware
+              files:
+                - path: ../Hardware/Src/Matrix_keyboard.c
+              folders: []
     - name: Drivers
       files: []
       folders:
@@ -89,6 +93,8 @@ targets:
         - RTE/_Project
         - ../Drivers/SYSTEM
         - ../Core/Timer
+        - ../Hardware/lnc
+        - ../Hardware/Src
       libList: []
     excludeList:
       - <virtual_root>/Application/User/Core/GPIO.c

@@ -29,7 +29,6 @@ extern const struct gpio_pin LED;   //为了支持C++
 
 void led_init(void);
 void led_control(struct gpio_pin led, uint8_t state);
-void led_pwm(struct gpio_pin led, uint8_t duty);
 uint16_t rgb565_encode(uint8_t r, uint8_t g, uint8_t b);
 void led_rgb565(uint16_t rgb565);
 void LED_Init(void);    // 独立的LED灯

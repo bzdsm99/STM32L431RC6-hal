@@ -9,6 +9,8 @@
         "usart.h": "c",
         "map": "cpp",
         "timer.h": "c",
-        "stdarg.h": "c"
+        "stdarg.h": "c",
+        "matrix_keyboard.h": "c",
+        "borad.h": "c"
     }
 }

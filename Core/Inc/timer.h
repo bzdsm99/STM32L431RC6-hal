@@ -21,8 +21,6 @@ typedef enum {
 } TimerKey_t;
 
 
-
-
 #define TIM1_NPWM_USE                       // 使用定时器1的数量可控NPWM
 #define TIMER_KEY_COUNT (LPTIM2_KEY + 1)    // 定时器数量
 #define __TIMx_IC_MAX_CHANNLES  4           // 定时器最大通道数 1~4
@@ -42,11 +40,8 @@ typedef struct
 
 extern TimerConfig timer_configs[TIMER_KEY_COUNT];
 
-
 extern uint8_t g_timxchy_cap_sta;    /* 输入捕获状态 */
 extern uint16_t g_timxchy_cap_val;   /* 输入捕获值 */
-
-
 
 void Timx_baseStart_Init(TIM_TypeDef *Timx, uint16_t arr, uint16_t psc);
 void Timx_ICStart_Init(TIM_TypeDef *Timx, uint8_t channel_count, ...);
@@ -58,10 +53,6 @@ void timx_pwmStart_init(TIM_TypeDef *Timx, uint16_t arr, uint16_t psc,
     void atim1_npwm_chy_set(uint32_t npwm);
 #endif
 void timx_pwmSetCompare(TIM_TypeDef *Timx,unsigned int TIM_CHANNEL_x,uint16_t pwm_vaule);
-
-
-
-
 
 #ifdef __cplusplus
 }

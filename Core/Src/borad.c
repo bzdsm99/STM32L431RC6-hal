@@ -27,22 +27,6 @@ void led_control(struct gpio_pin led, uint8_t state) {
     HAL_GPIO_WritePin(led.GPIOx, led.pin, state ? GPIO_PIN_SET : GPIO_PIN_RESET);
 }
 
-// PWM模拟函数，duty范围0-PWM_RESOLUTION
-void led_pwm(struct gpio_pin led, uint8_t duty) {
-    uint8_t i;
-    for(i = 0; i < PWM_RESOLUTION; i++) {
-        if(i < duty) {
-            led_control(led, 0); // 点亮LED
-        } else {
-            led_control(led, 1); // 熄灭LED
-        }
-        // 简单延时
-        for(int j = 0; j < 50; j++) {
-            __NOP();
-        }
-    }
-}
-
 // RGB565编码函数
 uint16_t rgb565_encode(uint8_t r, uint8_t g, uint8_t b) {
     // 将8位RGB值转换为RGB565格式
@@ -60,23 +44,51 @@ static void rgb565_decode(uint16_t rgb565, uint8_t *r, uint8_t *g, uint8_t *b) {
     *b = (rgb565 & 0x1F) << 3;          // 提取5位B并扩展到8位
 }
 
+
+
 // 使用RGB565值控制RGB LED
 void led_rgb565(uint16_t rgb565) {
+    // PWM计数器
+    static uint8_t pwm_counter;
+    // 当前RGB占空比
+    static uint8_t current_r_duty;
+    static uint8_t current_g_duty;
+    static uint8_t current_b_duty;
     uint8_t r, g, b;
-    
+
     // 解码RGB565值
     rgb565_decode(rgb565, &r, &g, &b);
-    
-    // 将0-255的值转换为0-100的占空比
-    // 注意: 由于是共阳极LED，值越大越暗，0为最亮，100为熄灭
-    uint8_t r_duty = 100 - (r * 100 / 255);
-    uint8_t g_duty = 100 - (g * 100 / 255);
-    uint8_t b_duty = 100 - (b * 100 / 255);
-    
-    // 使用PWM控制RGB LED
-    led_pwm(LED_R, r_duty);
-    led_pwm(LED_G, g_duty);
-    led_pwm(LED_B, b_duty);
+
+    // 将0-255的值转换为0-PWM_RESOLUTION的占空比
+    // 注意: 共阴极LED，值越大越亮，0为熄灭，PWM_RESOLUTION为最亮
+    current_r_duty = 100 - (r * PWM_RESOLUTION / 255);
+    current_g_duty = 100 - (g * PWM_RESOLUTION / 255);
+    current_b_duty = 100 - (b * PWM_RESOLUTION / 255);
+
+    // 更新全局PWM计数器
+    pwm_counter++;
+    if (pwm_counter >= PWM_RESOLUTION) {
+        pwm_counter = 0;
+    }
+
+    // 同步更新RGB LED状态
+    if (pwm_counter < current_r_duty) {
+        led_control(LED_R, 1); // 点亮红色LED
+    } else {
+        led_control(LED_R, 0); // 熄灭红色LED
+    }
+
+    if (pwm_counter < current_g_duty) {
+        led_control(LED_G, 1); // 点亮绿色LED
+    } else {
+        led_control(LED_G, 0); // 熄灭绿色LED
+    }
+
+    if (pwm_counter < current_b_duty) {
+        led_control(LED_B, 1); // 点亮蓝色LED
+    } else {
+        led_control(LED_B, 0); // 熄灭蓝色LED
+    }
 }
 
 //PC13上的一个LED灯

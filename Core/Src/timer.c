@@ -128,7 +128,7 @@ void timx_pwmStart_init(TIM_TypeDef *Timx, uint16_t arr, uint16_t psc, uint8_t c
             key = LPTIM2_KEY;
             break;
     }
-                           
+
     timer_configs[key].timx_Handles.Instance = Timx;                              /* 定时器x */
     timer_configs[key].timx_Handles.Init.Prescaler = psc;                         /* 定时器分频 */
     timer_configs[key].timx_Handles.Init.CounterMode = TIM_COUNTERMODE_UP;        /* 递增计数模式 */
@@ -190,11 +190,9 @@ void timx_pwmSetCompare(TIM_TypeDef *Timx,unsigned int TIM_CHANNEL_y,uint16_t pw
     __HAL_TIM_SetCompare(&timer_configs[key].timx_Handles, TIM_CHANNEL_y, pwm_vaule);
 }
 
-
 /**
  * @brief       高级定时器TIM1 通道Y 输出指定个数PWM 初始化函数(该开发板只有TIM1一个高级定时器)
- * @note
- *              高级定时器的时钟来自APB2, 而PCLK2 = 80Mhz, 我们设置PPRE2不分频, 因此
+ * @note        高级定时器的时钟来自APB2, 而PCLK2 = 80Mhz, 我们设置PPRE2不分频, 因此
  *              高级定时器时钟 = 80Mhz
  *              定时器溢出时间计算方法: Tout = ((arr + 1) * (psc + 1)) / Ft us.
  *              Ft=定时器工作频率,单位:Mhz
@@ -236,7 +234,6 @@ void atim1_npwmStart_init(uint16_t arr, uint16_t psc)
 
     __HAL_TIM_ENABLE_IT(&timer_configs[TIM1_KEY].timx_Handles, TIM_IT_UPDATE);       /* 允许更新中断 */
     HAL_TIM_PWM_Start(&timer_configs[TIM1_KEY].timx_Handles, TIM_CHANNEL_1);    /* 开启对应PWM通道 */
-    
 }
 
 /**
