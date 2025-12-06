@@ -1,23 +1,23 @@
 #include "cmsis_os.h"
 #include "gpio.h"
 #include "lcd.h"
-void SystemClock_Config(void);
+#include "sys.h"
+
 void MX_FREERTOS_Init(void);
 
 int main(void)
 {
     HAL_Init();
-    SystemClock_Config();
+    sys_stm32_clock_init(20);
     MX_GPIO_Init();
     lcd_init();
     lcd_clear(YELLOW);
-    // MX_FREERTOS_Init();
-    // osKernelStart();
+    MX_FREERTOS_Init();
+    osKernelStart();
     while (1)
     {
 
     }
-
 }
 
 

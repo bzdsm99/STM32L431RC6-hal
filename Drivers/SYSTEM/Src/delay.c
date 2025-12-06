@@ -3,12 +3,6 @@
 
 extern __IO uint32_t uwTick;
 
-void delay_init(void)
-{
-    // 初始化DWT
-    CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
-    DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
-}
 
 void delay_us(uint32_t us)
 {
@@ -39,3 +33,4 @@ void delay_ms(uint32_t ms)
         while((HAL_GetTick() - startTick) < ms);
     }
 }
+

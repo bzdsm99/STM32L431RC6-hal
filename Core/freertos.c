@@ -40,7 +40,7 @@ void MX_FREERTOS_Init(void) {
 
 void StartDefaultTask(void const * argument)
 {
-    delay_init();
+
     lcd_init();
     lcd_clear(YELLOW);
     for(;;)
