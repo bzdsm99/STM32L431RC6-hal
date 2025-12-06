@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- !!! Embedded IDE: Cppcheck config template !!! -->
+<project version="1">
+    <builddir>build</builddir>
+    <platform>unix32</platform>
+    <analyze-all-vs-configs>false</analyze-all-vs-configs>
+    <check-headers>true</check-headers>
+    <check-unused-templates>true</check-unused-templates>
+    <max-ctu-depth>2</max-ctu-depth>
+    <max-template-recursion>100</max-template-recursion>
+    <includedir>
+        <!-- !!! DON'T MODIFY THE FLOLLOWING CONTENTS !!! -->
+        <dir name="../../../Core/Inc/"/>
+		<dir name="../../../Drivers/STM32L4xx_HAL_Driver/Inc/"/>
+		<dir name="../../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy/"/>
+		<dir name="../../../Drivers/CMSIS/Device/ST/STM32L4xx/Include/"/>
+		<dir name="../../../Drivers/CMSIS/Include/"/>
+		<dir name="../../.cmsis/include/"/>
+		<dir name="../../RTE/_Project/"/>
+		<dir name="../../../Drivers/SYSTEM/"/>
+		<dir name="../../../Core/Timer/"/>
+		<dir name="../../../../../../Program Files/Keil_v5/ARM/ARMCC/include/"/>
+		<dir name="../../../../../../Program Files/Keil_v5/ARM/ARMCC/include/rw/"/>
+    </includedir>
+    <defines>
+        <!-- example: <define name="DEF=123"/> -->
+        <define name="__VSCODE_CPPTOOL"/>
+		<define name="USE_HAL_DRIVER"/>
+		<define name="STM32L431xx"/>
+		<define name="__STDC__=1"/>
+		<define name="__STDC_VERSION__=199901L"/>
+		<define name="__STDC_HOSTED__=1"/>
+		<define name="__STDC_ISO_10646__=200607"/>
+		<define name="__EDG__=1"/>
+		<define name="__EDG_VERSION__=407"/>
+		<define name="__EDG_SIZE_TYPE__=unsigned int"/>
+		<define name="__EDG_PTRDIFF_TYPE__=int"/>
+		<define name="__sizeof_int=4"/>
+		<define name="__sizeof_long=4"/>
+		<define name="__sizeof_ptr=4"/>
+		<define name="__ARMCC_VERSION=5060061"/>
+		<define name="__TARGET_CPU_CORTEX_M4_FP=1"/>
+		<define name="__TARGET_FPU_VFPV4_SP_D16=1"/>
+		<define name="__MICROLIB=1"/>
+		<define name="__CC_ARM=1"/>
+		<define name="__arm=1"/>
+		<define name="__arm__=1"/>
+		<define name="__TARGET_ARCH_7E_M=1"/>
+		<define name="__TARGET_ARCH_ARM=0"/>
+		<define name="__TARGET_ARCH_THUMB=4"/>
+		<define name="__TARGET_ARCH_A64=0"/>
+		<define name="__TARGET_ARCH_AARCH32=1"/>
+		<define name="__TARGET_PROFILE_M=1"/>
+		<define name="__TARGET_FEATURE_HALFWORD=1"/>
+		<define name="__TARGET_FEATURE_THUMB=1"/>
+		<define name="__TARGET_FEATURE_MULTIPLY=1"/>
+		<define name="__TARGET_FEATURE_DSPMUL=1"/>
+		<define name="__TARGET_FEATURE_DOUBLEWORD=1"/>
+		<define name="__TARGET_FEATURE_DIVIDE=1"/>
+		<define name="__TARGET_FEATURE_UNALIGNED=1"/>
+		<define name="__TARGET_FEATURE_CLZ=1"/>
+		<define name="__TARGET_FEATURE_DMB=1"/>
+		<define name="__TARGET_FPU_VFPV4=1"/>
+		<define name="__TARGET_FPU_VFP=1"/>
+		<define name="__TARGET_FPU_VFP_SINGLE=1"/>
+		<define name="__TARGET_FEATURE_EXTENSION_REGISTER_COUNT=16"/>
+		<define name="__APCS_INTERWORK=1"/>
+		<define name="__FP_FAST_FMAF=1"/>
+		<define name="__thumb=1"/>
+		<define name="__thumb__=1"/>
+		<define name="__t32__=1"/>
+		<define name="__OPTIMISE_SPACE=1"/>
+		<define name="__OPT_SMALL_ASSERT=1"/>
+		<define name="__OPTIMISE_LEVEL=2"/>
+    </defines>
+    <undefines>
+        <!-- example: <undefine>UNDEF</undefine> -->
+    </undefines>
+    <paths>
+        <!-- !!! DON'T MODIFY THE FLOLLOWING CONTENTS !!! -->
+        <dir name="../../../Drivers/SYSTEM/delay.c"/>
+		<dir name="../../../Drivers/SYSTEM/sys.c"/>
+		<dir name="../../../Drivers/SYSTEM/usart.c"/>
+		<dir name="../../../Drivers/SYSTEM/wdg.c"/>
+		<dir name="../../../Core/Src/system_stm32l4xx.c"/>
+		<dir name="../../../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim.c"/>
+		<dir name="../../../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim_ex.c"/>
+		<dir name="../../../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.c"/>
+		<dir name="../../../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart_ex.c"/>
+		<dir name="../../../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.c"/>
+		<dir name="../../../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c.c"/>
+		<dir name="../../../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c_ex.c"/>
+		<dir name="../../../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.c"/>
+		<dir name="../../../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.c"/>
+		<dir name="../../../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash.c"/>
+		<dir name="../../../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c"/>
+		<dir name="../../../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ramfunc.c"/>
+		<dir name="../../../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.c"/>
+		<dir name="../../../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dma.c"/>
+		<dir name="../../../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dma_ex.c"/>
+		<dir name="../../../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c"/>
+		<dir name="../../../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.c"/>
+		<dir name="../../../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.c"/>
+		<dir name="../../../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_exti.c"/>
+		<dir name="../../../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_iwdg.c"/>
+		<dir name="../../../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_wwdg.c"/>
+		<dir name="../../../Core/main.cpp"/>
+		<dir name="../../../Core/Src/stm32l4xx_it.c"/>
+		<dir name="../../../Core/Src/stm32l4xx_hal_msp.c"/>
+		<dir name="../../../Core/Src/OLED.c"/>
+		<dir name="../../../Core/Src/OLED_Data.c"/>
+		<dir name="../../../Core/Src/borad.c"/>
+		<dir name="../../../Core/Timer/timer.cpp"/>
+    </paths>
+    <libraries>
+        <!-- example: <library>gnu</library> -->
+        <library>gnu</library>
+    </libraries>
+</project>

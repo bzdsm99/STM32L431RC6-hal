@@ -1,0 +1,10 @@
+.\build\Project\.obj\__\Drivers\FreeRTOS\port\heap_4.o: .\..\Drivers\FreeRTOS\port\heap_4.c
+.\build\Project\.obj\__\Drivers\FreeRTOS\port\heap_4.o: ../Drivers/FreeRTOS/lnc/FreeRTOS.h
+.\build\Project\.obj\__\Drivers\FreeRTOS\port\heap_4.o: ../Drivers/FreeRTOS/FreeRTOSConfig.h
+.\build\Project\.obj\__\Drivers\FreeRTOS\port\heap_4.o: ../Drivers/FreeRTOS/lnc/projdefs.h
+.\build\Project\.obj\__\Drivers\FreeRTOS\port\heap_4.o: ../Drivers/FreeRTOS/lnc/portable.h
+.\build\Project\.obj\__\Drivers\FreeRTOS\port\heap_4.o: ../Drivers/FreeRTOS/lnc/deprecated_definitions.h
+.\build\Project\.obj\__\Drivers\FreeRTOS\port\heap_4.o: ../Drivers/FreeRTOS/port/portmacro.h
+.\build\Project\.obj\__\Drivers\FreeRTOS\port\heap_4.o: ../Drivers/FreeRTOS/lnc/mpu_wrappers.h
+.\build\Project\.obj\__\Drivers\FreeRTOS\port\heap_4.o: ../Drivers/FreeRTOS/lnc/task.h
+.\build\Project\.obj\__\Drivers\FreeRTOS\port\heap_4.o: ../Drivers/FreeRTOS/lnc/list.h

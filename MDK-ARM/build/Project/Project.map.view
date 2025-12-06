@@ -1,0 +1,6 @@
+tool: AC5
+fileName: 'Project.map'
+elfName: 'Project.axf'
+compilerName: 'ARM Compiler'
+compilerFullName: 'Component: ARM Compiler 5.06 update 1 (build 61)'
+compilerPath: 'D:\Program Files\Keil_v5\ARM\ARMCC\bin\armcc.exe'
