@@ -1,0 +1,105 @@
+#include "stm32l4xx_hal.h"
+#include "borad.h"
+#include "delay.h"
+#include "sys.h"
+#include "usart.h"
+#include "Timer.h"
+#include "LCD.h"
+#include "dma.h"
+#include "string.h"
+
+/* 要发送的数据 */
+const char TEXT_TO_SEND[] = "hello world for you.\r\n";
+#define SEND_BUF_SIZE  sizeof(TEXT_TO_SEND) - 1  // 减1是因为不需要发送字符串结束符'\0'
+
+/* 发送缓冲区 */
+uint8_t g_sendbuf[SEND_BUF_SIZE];
+
+/* 接收缓冲区已移至dma.c中定义，这里通过包含dma.h使用外部声明的g_rx_buffer */
+
+uint8_t transfer_count = 0;  /* 传输计数 */
+
+int main(void)
+{
+    uint32_t elapsed_time, tick_time;
+    uint8_t key = 0;
+    
+    HAL_Init();
+    sys_stm32_clock_init(20);
+    delay_init(80);
+    key_init();
+    led_init();
+    LED_Init();
+    usart_init(115200);
+    lcd_init();
+    
+    /* 初始化DMA */
+    dma_usart2_init();
+    
+    /* 启动DMA接收 */
+    dma_usart2_start_receive(g_rx_buffer, sizeof(g_rx_buffer));
+    
+    printf("\r\nSTM32L431RC6 USART2 DMA Test\r\n");
+    printf("TX: DMA1_Channel7, RX: DMA1_Channel6\r\n");
+    printf("Press KEY0 to send data via DMA\r\n");
+
+    /* 准备发送缓冲区 */
+    memcpy(g_sendbuf, TEXT_TO_SEND, SEND_BUF_SIZE);
+
+    /* 初始显示 */
+    lcd_printf(1, 1, LCD_FONT_16, "DMA TX/RX Test");
+    lcd_printf(2, 1, LCD_FONT_16, "Press KEY0     ");
+
+    tick_time = HAL_GetTick();
+    
+    while (1)
+    {
+        elapsed_time = HAL_GetTick() - tick_time;
+        lcd_show_num(0, spilcd_height-16, elapsed_time/1000, 8, LCD_FONT_16, NUM_SHOW_NOZERO, RED);
+
+        key = key_scan();
+        if (key == 1)
+        {
+            transfer_count++;
+            printf("\r\n--- DMA Transfer #%d ---\r\n", transfer_count);
+            
+            dma_usart2_transmit(g_sendbuf, SEND_BUF_SIZE);
+            
+            lcd_printf(1, 1, LCD_FONT_16, "DMA Sending... ");
+            lcd_printf(2, 1, LCD_FONT_16, "Count: %d     ", transfer_count);
+            
+            delay_ms(500);
+        }
+        
+        /* 检查DMA接收缓冲区中是否有新数据 */
+        uint8_t new_data[64];
+        uint16_t data_len = dma_usart2_get_new_data(new_data, sizeof(new_data));
+        
+        if (data_len > 0) {
+            printf("New data received. Length: %d\r\n", data_len);
+            
+            /* 显示新接收的数据 */
+            printf("Received data: ");
+            for (uint16_t i = 0; i < data_len; i++) {
+                if (new_data[i] == '\r') {
+                    printf("\\r");
+                } else if (new_data[i] == '\n') {
+                    printf("\\n");
+                } else {
+                    printf("%c", new_data[i]);
+                }
+            }
+            printf("\r\n");
+        }
+        
+        // 添加错误检查
+        extern UART_HandleTypeDef g_uart_handle;
+        if (g_uart_handle.ErrorCode != HAL_UART_ERROR_NONE) {
+            printf("UART Error Detected: 0x%08X\r\n", g_uart_handle.ErrorCode);
+            // 清除错误代码
+            g_uart_handle.ErrorCode = HAL_UART_ERROR_NONE;
+        }
+        
+        delay_ms(100);  /* 延长延时，便于观察 */
+    }
+}

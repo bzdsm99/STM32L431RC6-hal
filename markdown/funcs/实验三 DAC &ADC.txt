@@ -1,0 +1,73 @@
+#include "stm32l4xx_hal.h"
+#include "borad.h"
+#include "delay.h"
+#include "sys.h"
+#include "usart.h"
+#include "adc.h"
+#include "dac.h"
+#include <string.h>
+#include <stdio.h>
+
+// 定义初始电压值
+uint16_t dac_value = 2048; // 初始值为12位DAC的中间值 (2048)
+bool show_info = false;
+/**
+ * @brief  中断服务程序中需要做的事情
+           在HAL库中所有的外部中断服务函数都会调用此函数
+ * @param  GPIO_Pin:中断引脚号
+ * @retval 无
+ */
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+    if(GPIO_Pin == KEY_1.pin)
+    {
+        dac_value += 200; // 按下KEY1，增加模拟量输出
+        printf("按键1按下,模拟量输出增加200,dac_value = %d\r\n",dac_value);
+        show_info = true;
+    }
+    else if(GPIO_Pin == KEY_2.pin)
+    {
+        dac_value -= 200; // 按下KEY2，减少模拟量输出
+        printf("按键2按下,模拟量输出减少200,dac_value = %d\r\n",dac_value);
+        show_info = true;
+    }
+}
+
+int main(void)
+{
+    uint32_t adc_value;
+    float adc_voltage;
+
+    // 初始化系统
+    HAL_Init();
+    sys_stm32_clock_init(20); // 系统时钟初始化
+    delay_init(80);           // 延时初始化
+    key_init();               // 按键初始化
+    led_init();               // LED初始化
+    usart_init(115200);       // 串口初始化
+
+    adc_add_channel(ADC_CHANNEL_11, GPIOA, GPIO_PIN_1);  // PA6
+    adc_init_channels();
+    dac_init();
+
+    while (1)
+    {
+        // 设置DAC输出电压
+        dac_set_voltage_ch2((float)dac_value * 3.3f / 4095.0f); //PA5
+
+        // 延时一段时间
+        delay_ms(100);
+
+        // 读取ADC采样值
+        adc_value = adc_get_value(ADC_CHANNEL_11);   //PA6
+        adc_voltage = ((float)adc_value * 3.3f) / 4095.0f; // 转换为电压值
+
+        if(show_info)
+        {
+            // 在LCD上显示信息
+            printf("PA5的DAC: %u 输出电压(%.2fV) \r\n", dac_value, (float)dac_value * 3.3f / 4095.0f);
+            printf("PA6的ADC: %lu 测得电压(%.2fV) \r\n", adc_value, adc_voltage);
+            show_info = false;
+        }
+    }
+}

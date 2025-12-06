@@ -1,0 +1,83 @@
+#include "stm32l4xx_hal.h"
+#include "borad.h"
+#include "delay.h"
+#include "sys.h"
+#include "usart.h"
+#include "Timer.h"
+#include "LCD.h"
+#include "dma.h"
+#include "string.h"
+
+int main(void)
+{
+    uint32_t elapsed_time, tick_time;
+    
+    HAL_Init();
+    sys_stm32_clock_init(20);
+    delay_init(80);
+    key_init();
+    led_init();
+    LED_Init();
+    usart_init(115200);
+    lcd_init();
+    
+    printf("Starting simple memory to memory DMA test...\r\n");
+    
+    // 初始化内存到内存DMA
+    if (dma_mem2mem_init() != HAL_OK) {
+        printf("Memory to memory DMA initialization failed!\r\n");
+        while(1); // 错误时停止
+    } else {
+        printf("Memory to memory DMA initialization success!\r\n");
+    }
+
+    tick_time = HAL_GetTick();
+    
+    // 测试数据
+    static uint8_t source_data[10] = {0x11, 0x22, 0x33, 0x44, 0x55,
+                                      0x66, 0x77, 0x88, 0x99, 0xAA};
+    static uint8_t dest_data[10] = {0};
+    
+    printf("Source address: 0x%08X\r\n", (unsigned int)source_data);
+    printf("Destination address: 0x%08X\r\n", (unsigned int)dest_data);
+    
+    // 使用同步DMA传输函数传输数据
+    if (dma_mem2mem_transfer_sync((uint32_t*)source_data, (uint32_t*)dest_data, 10, 3000) == HAL_OK) {
+        printf("DMA transfer success!\r\n");
+        
+        // 验证传输结果
+        uint8_t transfer_correct = 1;
+        for (int i = 0; i < 10; i++) {
+            if (source_data[i] != dest_data[i]) {
+                transfer_correct = 0;
+                break;
+            }
+        }
+        
+        if (transfer_correct) {
+            printf("Transfer verification passed!\r\n");
+            printf("Source data: ");
+            for (int i = 0; i < 10; i++) {
+                printf("0x%02X ", source_data[i]);
+            }
+            printf("\r\n");
+            
+            printf("Destination data: ");
+            for (int i = 0; i < 10; i++) {
+                printf("0x%02X ", dest_data[i]);
+            }
+            printf("\r\n");
+        } else {
+            printf("Transfer verification failed!\r\n");
+        }
+    } else {
+        printf("DMA transfer failed!\r\n");
+    }
+    
+    // 主循环 - 显示运行时间
+    while (1)
+    {
+        elapsed_time = HAL_GetTick() - tick_time;
+        lcd_show_num(0, spilcd_height-16, elapsed_time/1000, 8, LCD_FONT_16, NUM_SHOW_NOZERO, RED);
+    }
+}

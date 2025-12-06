@@ -1,0 +1,24 @@
+The 'Blinky' project is a simple CMSIS RTOS2 based example for
+ST 'STM32L476ZG' microcontroller using ST 'STM32L476G-EVAL' Board.
+Compliant to Cortex Microcontroller Software Interface Standard (CMSIS).
+
+Example functionality:
+ - Clock Settings:
+   - MSI     =            4 MHz
+   - SYSCLK  =           80 MHz
+
+ - LED LD1 is blinking as running light with fixed speed 500 ms
+ - BUTTON Wakeup is used for stop/start blinking LED
+
+The program is available in different targets:
+ - Debug:
+   - Compiler:                  ARM Compiler optimization Level 1
+   - Compiler:Event Recorder:   Enabled
+   - CMSIS:RTOS2:Keil RTX5:     Source
+ - Release:
+   - Compiler:                  ARM Compiler optimization Level 3
+   - Compiler:Event Recorder:   Disabled
+   - CMSIS:RTOS2:Keil RTX5:     Library
+
+Note:
+  Define C Preprocessor symbol USE_STM32L476G_EVAL_REVB when using Board Rev B
