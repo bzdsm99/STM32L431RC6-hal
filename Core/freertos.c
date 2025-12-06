@@ -9,7 +9,6 @@ osThreadId defaultTaskHandle;
 osThreadId ledToggleTaskHandle;
 
 
-
 void StartDefaultTask(void const * argument);
 void StartLed(void const * argument);
 
