@@ -65,7 +65,7 @@
 "project\cmsis_os.o"
 "project\heap_4.o"
 "project\port.o"
---strict --scatter "Project\Project.sct"
+--library_type=microlib --strict --scatter "Project\Project.sct"
 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
 --list "Project.map" -o Project\Project.axf

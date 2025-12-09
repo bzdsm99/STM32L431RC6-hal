@@ -31,14 +31,20 @@ uint8_t spilcd_dir = 0;             /* 默认横屏(1)、竖屏(0) */
 uint32_t g_point_color = BLACK;    /* 画笔颜色 */
 uint32_t g_back_color  = WHITE;    /* 背景色 */
 
-struct gpio_pin LCD_SCL_PIN = {GPIOB, GPIO_PIN_8};
-struct gpio_pin LCD_SDA_PIN = {GPIOB, GPIO_PIN_9};
-struct gpio_pin LCD_RES_PIN = {GPIOA, GPIO_PIN_5};
-struct gpio_pin LCD_DC_PIN  = {GPIOC, GPIO_PIN_2};
-struct gpio_pin LCD_CS_PIN  = {GPIOA, GPIO_PIN_0};
-struct gpio_pin LCD_BLK_PIN = {GPIOA, GPIO_PIN_4};
+//课程PPT的lcd接线定义
+// struct gpio_pin LCD_SCL_PIN = {GPIOB, GPIO_PIN_8};
+// struct gpio_pin LCD_SDA_PIN = {GPIOB, GPIO_PIN_9};
+// struct gpio_pin LCD_RES_PIN = {GPIOA, GPIO_PIN_5};
+// struct gpio_pin LCD_DC_PIN  = {GPIOC, GPIO_PIN_2};
+// struct gpio_pin LCD_CS_PIN  = {GPIOA, GPIO_PIN_0};
+// struct gpio_pin LCD_BLK_PIN = {GPIOA, GPIO_PIN_4};
 
-
+struct gpio_pin LCD_SCL_PIN = {GPIOA, GPIO_PIN_6};
+struct gpio_pin LCD_SDA_PIN = {GPIOA, GPIO_PIN_12};
+struct gpio_pin LCD_RES_PIN = {GPIOC, GPIO_PIN_9};
+struct gpio_pin LCD_DC_PIN  = {GPIOC, GPIO_PIN_4};
+struct gpio_pin LCD_CS_PIN  = {GPIOC, GPIO_PIN_5};
+struct gpio_pin LCD_BLK_PIN = {GPIOA, GPIO_PIN_8};
 
 //向SPI总线传输一个8位数据
 static void SPI_WriteData(uint8_t Data)
@@ -234,21 +240,21 @@ void lcd_display_dir(uint8_t dir)
  */
 void lcd_clear(uint16_t color) 
 {
-   lcd_set_address(0,0,spilcd_width-1,spilcd_height-1);
-   lcd_write_cmd(0x2C);
+    lcd_set_address(0,0,spilcd_width-1,spilcd_height-1);
+    lcd_write_cmd(0x2C);
 #if USE_LCD_BUF 
     for (uint32_t i = 0; i < spilcd_width * spilcd_height; i++) {
         lcd_buf[i] = color; // 直接写入颜色值
     }
 #else
     uint8_t i,j;
-   for(i=0;i<spilcd_width;i++)
-   {
-       for(j=0;j<spilcd_height;j++)
-       {
-           LCD_WriteData_16Bit(color); 
-       }
-   }
+    for(i=0;i<spilcd_width;i++)
+    {
+        for(j=0;j<spilcd_height;j++)
+        {
+            LCD_WriteData_16Bit(color); 
+        }
+    }
 #endif
 }
 
@@ -601,17 +607,17 @@ void lcd_fill_circle(uint16_t x, uint16_t y, uint16_t r, uint16_t color)
 
     for (i = 1; i <= imax; i++)
     {
-      if ((i * i + xr * xr) > sqmax)
-      {
-          /* draw lines from outside */
-          if (xr > imax)
-          {
+        if ((i * i + xr * xr) > sqmax)
+        {
+            /* draw lines from outside */
+            if (xr > imax)
+            {
             lcd_draw_hline (x - i + 1, y + xr, 2 * (i - 1), color);
             lcd_draw_hline (x - i + 1, y - xr, 2 * (i - 1), color);
-          }
+            }
 
-          xr--;
-      }
+            xr--;
+        }
 
       /* draw lines from inside (center) */
       lcd_draw_hline(x - xr, y + i, 2 * xr, color);
@@ -796,11 +802,11 @@ void lcd_show_string(uint16_t x, uint16_t y, lcd_font_t font,const char *str,  u
         {
             break;
         }
-      
-      lcd_show_char(x, y, *str, font, 0, color);
-      
-      x += ch_width;
-      str++;
+        
+        lcd_show_char(x, y, *str, font, 0, color);
+        
+        x += ch_width;
+        str++;
     }
 }
 

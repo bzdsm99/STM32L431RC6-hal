@@ -2,6 +2,7 @@
 #include "gpio.h"
 #include "lcd.h"
 #include "sys.h"
+#include "usart.h"
 
 void MX_FREERTOS_Init(void);
 
@@ -10,10 +11,14 @@ int main(void)
     HAL_Init();
     sys_stm32_clock_init(20);
     MX_GPIO_Init();
+    usart_init(115200);
+    printf("test start.\r\n");
     lcd_init();
+    dac_init();
     lcd_clear(YELLOW);
     MX_FREERTOS_Init();
     osKernelStart();
+
     while (1)
     {
 
@@ -22,9 +27,9 @@ int main(void)
 
 
 /**
-  * @brief  This function is executed in case of error occurrence.
-  * @retval None
-  */
+    * @brief  This function is executed in case of error occurrence.
+    * @retval None
+    */
 void Error_Handler(void)
 {
     /* USER CODE BEGIN Error_Handler_Debug */
@@ -38,12 +43,12 @@ void Error_Handler(void)
 
 #ifdef  USE_FULL_ASSERT
 /**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
+    * @brief  Reports the name of the source file and the source line number
+    *         where the assert_param error has occurred.
+    * @param  file: pointer to the source file name
+    * @param  line: assert_param error line source number
+    * @retval None
+    */
 void assert_failed(uint8_t *file, uint32_t line)
 {
     /* USER CODE BEGIN 6 */
@@ -52,3 +57,5 @@ void assert_failed(uint8_t *file, uint32_t line)
     /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
+
+
