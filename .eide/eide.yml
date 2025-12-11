@@ -18,16 +18,14 @@ virtualFolder:
         - name: User
           files:
             - path: Core/main.c
-            - path: Core/freertos.c
+            - path: Core/main.cpp
           folders:
             - name: Core
               files:
-                - path: Core/Src/gpio.c
                 - path: Core/Src/stm32l4xx_it.c
                 - path: Core/Src/stm32l4xx_hal_msp.c
                 - path: Core/Src/stm32l4xx_hal_timebase_tim.c
                 - path: Core/Src/adc.c
-                - path: Core/Src/borad.c
                 - path: Core/Src/dac.c
                 - path: Core/Src/dma.c
                 - path: Core/Src/pwr.c
@@ -35,6 +33,7 @@ virtualFolder:
                 - path: Core/Src/rtc.c
                 - path: Core/Src/system_stm32l4xx.c
                 - path: Core/Src/timer.c
+                - path: Core/Src/freertos.c
               folders: []
     - name: Drivers
       files: []
@@ -73,22 +72,21 @@ virtualFolder:
             - path: Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_usart_ex.c
             - path: Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_wwdg.c
           folders: []
-        - name: CMSIS
-          files:
-            - path: Core/Src/system_stm32l4xx.c
-          folders: []
         - name: SYSTEM
           files:
             - path: Drivers/SYSTEM/Src/delay.c
             - path: Drivers/SYSTEM/Src/sys.c
             - path: Drivers/SYSTEM/Src/usart.c
             - path: Drivers/SYSTEM/Src/wdg.c
+            - path: Drivers/Hardware/Src/borad.c
           folders: []
         - name: Hardware
           files:
             - path: Drivers/Hardware/Src/LCD.c
             - path: Drivers/Hardware/Src/OLED_Data.c
-            - path: Drivers/SYSTEM/Src/wdg.c
+            - path: Drivers/Hardware/Src/Matrix_keyboard.c
+            - path: Drivers/Hardware/Src/mpu6050.c
+            - path: Drivers/Hardware/Src/OLED.c
           folders: []
     - name: Middlewares
       files: []
@@ -105,6 +103,10 @@ virtualFolder:
             - path: Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.c
             - path: Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c
             - path: Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/port.c
+          folders: []
+        - name: StateMachine
+          files:
+            - path: Middlewares/StateMachine/LCD_Interface.c
           folders: []
     - name: ::CMSIS
       files: []
@@ -135,8 +137,11 @@ targets:
         - Drivers/SYSTEM/Inc
         - Drivers/Hardware/lnc
         - Drivers/Hardware/Src
+        - Middlewares/StateMachine
       libList: []
-    excludeList: []
+    excludeList:
+      - <virtual_root>/Drivers/CMSIS/system_stm32l4xx.c
+      - <virtual_root>/Application/User/main.cpp
     toolchain: AC5
     toolchainConfigMap:
       AC5:

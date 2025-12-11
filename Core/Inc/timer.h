@@ -43,6 +43,12 @@ extern TimerConfig timer_configs[TIMER_KEY_COUNT];
 extern uint8_t g_timxchy_cap_sta;    /* 输入捕获状态 */
 extern uint16_t g_timxchy_cap_val;   /* 输入捕获值 */
 
+
+void Timx_Set_TIM6_Callback(void (*func)(void));
+
+
+
+
 void Timx_baseStart_Init(TIM_TypeDef *Timx, uint16_t arr, uint16_t psc);
 void Timx_ICStart_Init(TIM_TypeDef *Timx, uint8_t channel_count, ...);
 
@@ -53,6 +59,8 @@ void timx_pwmStart_init(TIM_TypeDef *Timx, uint16_t arr, uint16_t psc,
     void atim1_npwm_chy_set(uint32_t npwm);
 #endif
 void timx_pwmSetCompare(TIM_TypeDef *Timx,unsigned int TIM_CHANNEL_x,uint16_t pwm_vaule);
+
+
 
 #ifdef __cplusplus
 }

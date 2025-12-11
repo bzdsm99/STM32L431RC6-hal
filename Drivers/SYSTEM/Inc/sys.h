@@ -4,6 +4,7 @@
 extern "C" {
 #endif 
 #include "stm32l4xx_hal.h"
+#include "stdbool.h"
 extern void Error_Handler(void);
 
 

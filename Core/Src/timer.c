@@ -31,7 +31,7 @@ void Timx_baseStart_Init(TIM_TypeDef *Timx, uint16_t arr, uint16_t psc)
         case (uint32_t)TIM6:    //基本定时器
             key = TIM6_KEY;
             break;
-        case (uint32_t)TIM7:    //基本定时器
+        case (uint32_t)TIM7:    //基本定时器    FreeRTOS使用了
             key = TIM7_KEY;
             break;
         case (uint32_t)TIM15:   //通用定时器
@@ -592,8 +592,15 @@ void TIM6_DAC_IRQHandler(void)
 // }
 
 
+static void (*external_TIM6_Callback)(void) = NULL;
 
-
+/**
+ * @brief       设置外部TIM6回调函数
+ * @param func: 要设置的函数指针
+ */
+void Timx_Set_TIM6_Callback(void (*func)(void)) {
+    external_TIM6_Callback = func;
+}
 
 /**
  * @brief       定时器更新中断回调函数
@@ -630,6 +637,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     if (htim->Instance == TIM6)
     {
         HAL_GPIO_TogglePin(LED.GPIOx,LED.pin);
+        if(external_TIM6_Callback != NULL)
+        {
+            external_TIM6_Callback();
+        }
     }
 
     // warning: 该定时器用于在FreeRTOS下实现时钟节拍，不可再使用

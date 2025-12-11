@@ -1,6 +1,4 @@
 #include "cmsis_os.h"
-#include "gpio.h"
-#include "lcd.h"
 #include "sys.h"
 #include "usart.h"
 
@@ -10,15 +8,9 @@ int main(void)
 {
     HAL_Init();
     sys_stm32_clock_init(20);
-    MX_GPIO_Init();
     usart_init(115200);
-    printf("test start.\r\n");
-    lcd_init();
-    dac_init();
-    lcd_clear(YELLOW);
     MX_FREERTOS_Init();
     osKernelStart();
-
     while (1)
     {
 

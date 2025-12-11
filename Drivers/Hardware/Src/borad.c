@@ -27,6 +27,13 @@ void led_control(struct gpio_pin led, uint8_t state) {
     HAL_GPIO_WritePin(led.GPIOx, led.pin, state ? GPIO_PIN_SET : GPIO_PIN_RESET);
 }
 
+// LED翻转函数
+void led_control_Toggle(struct gpio_pin led) {
+    HAL_GPIO_TogglePin(led.GPIOx, led.pin);
+}
+
+
+
 // RGB565编码函数
 uint16_t rgb565_encode(uint8_t r, uint8_t g, uint8_t b) {
     // 将8位RGB值转换为RGB565格式

@@ -7,6 +7,12 @@ char KEY_NUMCHARS[4][4] = {  //按键对应字符
     {'D', 'C', 'B', 'A'}
 };
 
+
+
+#if USE_KEYBOARD_EXIT
+
+#else   //软件扫描方式
+
 // 初始化函数
 void Matrix_keyboard_init(void)
 {
@@ -95,3 +101,6 @@ char Matrix_keyboard_scan(void)
 
     return key; // 返回按键字符，0 表示无按键按下
 }
+
+
+#endif

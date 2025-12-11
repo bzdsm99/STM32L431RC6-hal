@@ -1,6 +1,10 @@
 //LCD.h TFT彩屏
 #ifndef __SPILCD_H
 #define __SPILCD_H
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 #include "stm32l4xx_hal.h"
 #include "stm32l4xx_hal_spi.h"
@@ -162,6 +166,9 @@ void lcd_show_chinese(uint16_t x, uint16_t y, const char *chn);                 
 
 void lcd_printf(uint16_t Line, uint16_t Column, lcd_font_t font, const char *format, ...);
 
+#ifdef __cplusplus
+}
+#endif
 #endif
 
 

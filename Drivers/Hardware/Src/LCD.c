@@ -52,7 +52,7 @@ static void SPI_WriteData(uint8_t Data)
 	unsigned char i=0;
 	for(i=8;i>0;i--)
 	{
-	    if(Data&0x80)	
+        if(Data&0x80)	
         LCD_SDA_SET; //输出数据
         else LCD_SDA_CLR;
 
@@ -1145,10 +1145,6 @@ void lcd_show_chinese_char(uint16_t x, uint16_t y, uint8_t index)
     uint8_t i, j;
     uint8_t dataH, dataL;
     
-    /* 检查坐标是否在屏幕范围内 */
-    if ((x + 16 > spilcd_width) || (y + 16 > spilcd_height)) {
-        return;
-    }
     
     if(spilcd_dir == 0)
     {
