@@ -18,6 +18,7 @@ const char * Student_Name = "张庭华";
 const char * Professional = "智能科学与技术";
 const char * Product_Name = "Chinese National Missile Defense (CNMD)        ";
 static uint8_t LCD_Scrolling_Line;
+static uint8_t page = 0;
 const unsigned char gImage[20000];
 
 
@@ -27,7 +28,10 @@ static bool last_digit_student_ID_is_even(void);
 static void LED_Startshow(void);
 static void lCD_RuningPageStaticScreen(uint8_t page,const char *chn);
 
+
+
 static void (*LED_blink)(void) = NULL;
+static void (*LED_func)(void) = NULL;
 
 
 //锁屏界面
@@ -295,33 +299,31 @@ static void lCD_RuningErrorStaticScreen(void)
     xTaskResumeAll();
 }
 
-static const char *LCD_PageName[8] = {"光照强度值"};
+void Runing_Page_1(void);
+void Runing_Page_2(void);
+static const char *LCD_PageName[8] = {"光照强度值","画图"};
+static void (*func_pages[8])(void) = {Runing_Page_1,Runing_Page_2};
 
-void Runing_Page_1(void)
-{
-    lcd_printf(4,1,LCD_FONT_24,"ADC: %d",adc_get_value(ADC_CHANNEL_5));
-    // 关闭三色LED灯
-    led_control(LED_R,1);
-    led_control(LED_G,1);
-    led_control(LED_B,1);
-    last_digit_student_ID_is_even() ? led_control(LED_R,0) : led_control(LED_B,0);
-    delay_ms(200);
-}
+
 
 
 // 接收键盘监控任务通知的按键值
 void LCD_RuningScreen(uint32_t keyValue)
 {
-    static uint8_t page = 0;
-    
     LED_blink = NULL;   //取消闪烁
     LCD_Scrolling_Line = 1;     //让产品名称在第一行滚动
+    lcd_init();
+    g_back_color = WHITE;
+    g_point_color = BLACK;
     lcd_clear(g_back_color);
-
+    delay_ms(20);
+    
     if(keyValue == Student_ID[page])
     {
+        
+        lCD_RuningPageStaticScreen(page+1,LCD_PageName[page]);
+        LED_func = func_pages[page];
         page++;
-        lCD_RuningPageStaticScreen(page,LCD_PageName[page-1]);
     }
     else
     {
@@ -330,13 +332,71 @@ void LCD_RuningScreen(uint32_t keyValue)
 
 }
 
+void Runing_Page_1(void)
+{
+    static uint8_t num = 0;
+
+    lcd_printf(4,1,LCD_FONT_24,"ADC: %d   ",adc_get_value(ADC_CHANNEL_5));
+    lcd_show_chinese(10,6,"第");
+    lcd_show_chinese(10,8,"页");
+    lcd_printf(10,13,LCD_FONT_16,"%d",page);
+    lcd_show_chinese(2,1,LCD_PageName[page-1]);
+    // printf("Runing_Page_1 runing %d\r\n", num);
+    // 关闭三色LED灯
+    led_control(LED_R,1);
+    led_control(LED_G,1);
+    led_control(LED_B,1);
+    last_digit_student_ID_is_even() ? led_control(LED_R,0) : led_control(LED_B,0);
+    num++;
+    if(num >= 20)  //为什么这么写，因为见鬼了
+    {
+        lcd_init();
+        num = 0;
+    }
+    vTaskDelay(pdMS_TO_TICKS(500));
+}
+
+
+
+void Runing_Page_2(void)
+{
+    //printf("Runing_Page_2 runing\r\n");
+}
+
+
+
+#include "semphr.h"  // 添加互斥量支持
+
+SemaphoreHandle_t xLEDFuncMutex = NULL;
+
 
 void TaskLCDRunfunc(void const * argument)
 {
-    Runing_Page_1();
-    delay_ms(20);
-}
+    portENTER_CRITICAL();       // 进入临界区
+    printf("TaskLCDRunfunc Start\r\n");
+    if(xLEDFuncMutex == NULL)
+    {
+        xLEDFuncMutex = xSemaphoreCreateMutex();
+        if(xLEDFuncMutex == NULL)
+        {
+            printf("Failed to create mutex\r\n");
+        }
+    }
+    portEXIT_CRITICAL();        // 退出临界区
 
+    for(;;) {
+        if(LED_func != NULL)
+        {
+            // 尝试获取互斥量，最多等待10ms
+            if(xSemaphoreTake(xLEDFuncMutex, pdMS_TO_TICKS(10)) == pdTRUE)
+            {
+                LED_func();
+                xSemaphoreGive(xLEDFuncMutex);
+            }
+        }
+        vTaskDelay(pdMS_TO_TICKS(50));
+    }
+}
 
 
 

@@ -58,7 +58,7 @@ void MX_FREERTOS_Init(void) {
     LCD_StartScreen();    // 上电开机界面
     adc_add_channel(ADC_CHANNEL_5,GPIOA,GPIO_PIN_0);    //PA0
     adc_init_channels();
-
+    delay_ms(20);
     // 创建队列，用于按键任务和LED任务之间的通信
     // 队列只存放1个字符，新的值会覆盖旧的值
     xKeyQueue = xQueueCreate(1, sizeof(char));
@@ -68,7 +68,7 @@ void MX_FREERTOS_Init(void) {
     }
 
     // 创建状态机任务
-    osThreadDef(defulat, TaskDefulat, osPriorityNormal, 0, 512);
+    osThreadDef(defulat, TaskDefulat, osPriorityNormal, 0, 256);
     taskDefulatLedHandle = osThreadCreate(osThread(defulat), NULL);
 
     // 创建矩阵键盘任务
@@ -76,7 +76,7 @@ void MX_FREERTOS_Init(void) {
     taskMatrix_keyboardHandle = osThreadCreate(osThread(Matrix_keyboard), NULL);
 
     // 创建LCD子任务
-    osThreadDef(LCD_func,TaskLCDRunfunc, osPriorityNormal, 0, 512);
+    osThreadDef(LCD_func,TaskLCDRunfunc, osPriorityNormal, 0, 256);
     taskLCDRunfuncHandle = osThreadCreate(osThread(LCD_func), NULL);
 }
 
@@ -90,18 +90,17 @@ void TaskDefulat(void const * argument)
 
     for (;;)
     {
+
         // 从队列接收按键值，使用较短的超时时间以提高响应性
         if (xQueueReceive(xKeyQueue, &keyValue, pdMS_TO_TICKS(10)) == pdTRUE) {
             // 成功接收到按键值，可以通过串口打印或其他方式处理
             printf("Received key: %c\r\n", keyValue);
-            vTaskSuspendAll();
             LCD_RuningScreen(keyValue);
-            xTaskResumeAll();
         }
 
 
         // 使用vTaskDelay替代delay_ms以符合FreeRTOS规范
-        vTaskDelay(pdMS_TO_TICKS(5));
+        vTaskDelay(pdMS_TO_TICKS(30));
     }
 }
 
@@ -130,6 +129,6 @@ void TaskMatrix_keyboard(void const * argument)
         }
         
         // 使用vTaskDelay替代osDelay以符合FreeRTOS规范
-        vTaskDelay(pdMS_TO_TICKS(5));
+        vTaskDelay(pdMS_TO_TICKS(20));
     }
 }
