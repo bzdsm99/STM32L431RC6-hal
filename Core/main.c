@@ -1,6 +1,11 @@
 #include "cmsis_os.h"
 #include "sys.h"
 #include "usart.h"
+#include "LCD.h"
+
+
+#include "buzzer.h"
+#include "delay.h"
 
 void MX_FREERTOS_Init(void);
 
@@ -9,13 +14,23 @@ int main(void)
     HAL_Init();
     sys_stm32_clock_init(20);
     usart_init(115200);
+    lcd_init();
+    
+    //static uint32_t ms_number = 0;
+    // 初始化蜂鸣器
+    buzzer_init();
+
     MX_FREERTOS_Init();
     osKernelStart();
     while (1)
     {
-
+        // HAL_GPIO_WritePin(BUZZER_PORT, BUZZER_PIN, GPIO_PIN_RESET);
+        // delay_ms(ms_number);
+        // HAL_GPIO_WritePin(BUZZER_PORT, BUZZER_PIN, GPIO_PIN_SET);
+        // lcd_printf(1, 1, LCD_FONT_16, "%d",ms_number++);
+        // delay_ms(1000);
     }
-}
+}   
 
 
 /**
@@ -49,5 +64,3 @@ void assert_failed(uint8_t *file, uint32_t line)
     /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
-
-

@@ -1,7 +1,7 @@
 #include "sys.h"
 #include "usart.h"
 #include "dma.h"
-
+#include <string.h>
 /* 如果使用os,则包括下面的头文件即可. */
 #if SYS_SUPPORT_OS
 #include "os.h" /* os 使用 */

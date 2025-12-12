@@ -1,7 +1,7 @@
-#include "stm32l4xx_hal.h" // 引入HAL库头文件
+#include "stm32l4xx_hal.h"
 #include "mpu6050.h"
 #include "delay.h"
-// #include "usart.h"
+#include "usart.h"
 #include "math.h"
 
 // 添加hi2c1的定义
@@ -47,7 +47,7 @@ uint8_t MPU_Write_Byte(uint8_t reg, uint8_t data) {
 
 
 // MPU6050初始化
-uint8_t MPU_Init(void) {
+bool MPU_Init(void) {
     uint8_t res;
 
     // 使能I2C1时钟
@@ -66,40 +66,106 @@ uint8_t MPU_Init(void) {
     hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
     hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
     if (HAL_I2C_Init(&hi2c1) != HAL_OK) {
-        //printf("I2C1初始化失败\r\n");
-        return 1;
+        printf("I2C1初始化失败\r\n");
+        return false;
     }
     
-    MPU_Write_Byte(MPU_PWR_MGMT1_REG, 0x80); // 复位MPU6050
-    //status ? printf("MPU6050初始化失败\r\n") : printf("MPU6050初始化成功\r\n");
+    // 检查I2C总线是否正常工作，尝试读取一个不存在的设备地址
+    uint8_t dummy;
+    if (HAL_I2C_Master_Receive(&hi2c1, (0x69 << 1), &dummy, 1, 100) == HAL_OK) {
+        // 如果能读取到数据，说明可能有其他设备或者总线有问题
+        printf("警告：检测到I2C地址0x69有响应，可能存在冲突\r\n");
+    }
+    
+    printf("开始MPU6050初始化...\r\n");
+    
+    // 复位MPU6050
+    if (MPU_Write_Byte(MPU_PWR_MGMT1_REG, 0x80) != 0) {
+        printf("MPU6050复位失败\r\n");
+        return false;
+    }
+    printf("MPU6050已复位\r\n");
     
     delay_ms(100);
-    MPU_Write_Byte(MPU_PWR_MGMT1_REG, 0x00); // 唤醒MPU6050
-    //status ? printf("MPU6050唤醒失败\r\n") : printf("MPU6050唤醒成功\r\n");
+    
+    // 唤醒MPU6050
+    if (MPU_Write_Byte(MPU_PWR_MGMT1_REG, 0x00) != 0) {
+        printf("MPU6050唤醒失败\r\n");
+        return false;
+    }
+    printf("MPU6050已唤醒\r\n");
 
-    MPU_Set_Gyro_Fsr(3);     // 设置陀螺仪量程 ±2000dps
-    MPU_Set_Accel_Fsr(0);    // 设置加速度计量程 ±2g
-    MPU_Set_Rate(50);        // 设置采样率 50Hz
-
-    MPU_Write_Byte(MPU_INT_EN_REG, 0x00);   // 关闭所有中断
-    MPU_Write_Byte(MPU_USER_CTRL_REG, 0x00); // 关闭I2C主模式
-    MPU_Write_Byte(MPU_FIFO_EN_REG, 0x00);  // 关闭FIFO
-    MPU_Write_Byte(MPU_INTBP_CFG_REG, 0x80); // INT引脚低电平有效
-    // 配置DLPF带宽为42Hz
-    MPU_Write_Byte(MPU_CONFIG_REG, 0x03); // 0x03 对应 42Hz 带宽
-    //MPU_Write_Byte(MPU_CONFIG_REG, 0x05); // 0x05 对应 10Hz 带宽
-
-    res = MPU_Read_Byte(MPU_DEVICE_ID_REG);
-    //printf("res = %d,MPU_ADDR = %d\r\n",res,MPU_ADDR);
-    if (res == 0x71 || res == 0x70) { // 检查器件ID是否为0x71或0x70
-        MPU_Write_Byte(MPU_PWR_MGMT1_REG, 0x01); // 设置CLKSEL, PLL X轴为参考
-        MPU_Write_Byte(MPU_PWR_MGMT2_REG, 0x00); // 加速度与陀螺仪都工作
-        MPU_Set_Rate(50); // 设置采样率为50Hz
-    } else {
-        return 1; // 初始化失败
+    // 设置传感器参数
+    if (MPU_Set_Gyro_Fsr(3) != 0) {     // 设置陀螺仪量程 ±2000dps
+        printf("设置陀螺仪量程失败\r\n");
+        return false;
+    }
+    
+    if (MPU_Set_Accel_Fsr(0) != 0) {    // 设置加速度计量程 ±2g
+        printf("设置加速度计量程失败\r\n");
+        return false;
+    }
+    
+    if (MPU_Set_Rate(50) != 0) {        // 设置采样率 50Hz
+        printf("设置采样率失败\r\n");
+        return false;
     }
 
-    return 0; // 初始化成功
+    // 配置其他寄存器
+    if (MPU_Write_Byte(MPU_INT_EN_REG, 0x00) != 0) {   // 关闭所有中断
+        printf("关闭中断失败\r\n");
+        return false;
+    }
+    
+    if (MPU_Write_Byte(MPU_USER_CTRL_REG, 0x00) != 0) { // 关闭I2C主模式
+        printf("关闭I2C主模式失败\r\n");
+        return false;
+    }
+    
+    if (MPU_Write_Byte(MPU_FIFO_EN_REG, 0x00) != 0) {  // 关闭FIFO
+        printf("关闭FIFO失败\r\n");
+        return false;
+    }
+    
+    if (MPU_Write_Byte(MPU_INTBP_CFG_REG, 0x80) != 0) { // INT引脚低电平有效
+        printf("配置INT引脚失败\r\n");
+        return false;
+    }
+    
+    // 配置DLPF带宽为42Hz
+    if (MPU_Write_Byte(MPU_CONFIG_REG, 0x03) != 0) { // 0x03 对应 42Hz 带宽
+        printf("配置DLPF带宽失败\r\n");
+        return false;
+    }
+    
+    // 读取并验证设备ID
+    res = MPU_Read_Byte(MPU_DEVICE_ID_REG);
+    // printf("读取到的设备ID: %d (0x%02X)\r\n", res, res);
+    // printf("期望的设备ID: 112 (0x70) 或 113 (0x71)\r\n");
+    
+    if (res == 0x71 || res == 0x70) { // 检查器件ID是否为0x71或0x70
+        // 最终配置
+        if (MPU_Write_Byte(MPU_PWR_MGMT1_REG, 0x01) != 0) { // 设置CLKSEL, PLL X轴为参考
+            printf("设置时钟源失败\r\n");
+            return false;
+        }
+        
+        if (MPU_Write_Byte(MPU_PWR_MGMT2_REG, 0x00) != 0) { // 加速度与陀螺仪都工作
+            printf("配置电源管理2失败\r\n");
+            return false;
+        }
+        
+        if (MPU_Set_Rate(50) != 0) { // 再次设置采样率为50Hz
+            printf("最终设置采样率失败\r\n");
+            return false;
+        }
+        
+        //printf("MPU6050初始化成功!\r\n");
+        return true; // 初始化成功
+    } else {
+        //printf("设备ID不匹配，初始化失败\r\n");
+        return false; // 初始化失败
+    }
 }
 
 // 设置陀螺仪量程

@@ -3,10 +3,11 @@
 
 #include "stm32l4xx_hal.h" // HAL库头文件
 #include "stdbool.h"
+// 用的硬件IIC  I2C1的GPIO引脚 (PB6: SCL, PB7: SDA)
 // 软件模拟IIC引脚定义
-#define MPU_IIC_SCL_PIN    GPIO_PIN_11
-#define MPU_IIC_SDA_PIN    GPIO_PIN_10
-#define MPU_IIC_GPIO_PORT  GPIOA
+// #define MPU_IIC_SCL_PIN    GPIO_PIN_6
+// #define MPU_IIC_SDA_PIN    GPIO_PIN_7
+// #define MPU_IIC_GPIO_PORT  GPIOB
 
 // IO方向设置
 #define MPU_SDA_IN()  {MPU_IIC_GPIO_PORT->MODER &= ~(3 << (3 * 2)); MPU_IIC_GPIO_PORT->MODER |= (0 << (3 * 2));}
@@ -90,7 +91,7 @@
 
 
 // 函数声明
-uint8_t MPU_Init(void);
+bool MPU_Init(void);
 uint8_t MPU_Write_Byte(uint8_t reg, uint8_t data);
 uint8_t MPU_Read_Byte(uint8_t reg);
 
@@ -101,13 +102,13 @@ uint8_t MPU_Set_LPF(uint16_t lpf);
 uint8_t MPU_Set_Rate(uint16_t rate);
 uint8_t MPU_Set_Fifo(uint8_t sens);
 
-float MPU_Get_Temperature(void);  // 修正函数声明
+float MPU_Get_Temperature(void);
 void MPU_Get_Gyroscope(float *gx, float *gy, float *gz);
 void MPU_Get_Accelerometer(float *ax, float *ay, float *az);
 //void MPU_Get_Euler_Angles(float *pitch, float *roll, float *yaw);
 
-// 添加陀螺仪零偏校准函数声明
-void Calibrate_Gyro_Bias(void);
+
+
 
 #endif
 

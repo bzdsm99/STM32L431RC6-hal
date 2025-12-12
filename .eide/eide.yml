@@ -87,6 +87,7 @@ virtualFolder:
             - path: Drivers/Hardware/Src/Matrix_keyboard.c
             - path: Drivers/Hardware/Src/mpu6050.c
             - path: Drivers/Hardware/Src/OLED.c
+            - path: Drivers/Hardware/Src/buzzer.c
           folders: []
     - name: Middlewares
       files: []
@@ -107,6 +108,7 @@ virtualFolder:
         - name: StateMachine
           files:
             - path: Middlewares/StateMachine/LCD_Interface.c
+            - path: Middlewares/StateMachine/ImageData.c
           folders: []
     - name: ::CMSIS
       files: []
@@ -256,4 +258,14 @@ targets:
         bin: ""
         interface: stlink
         target: stm32l4x
+      STLink:
+        address: "0x8000000"
+        bin: ""
+        elFile: None
+        optionBytes: .eide/project.st.option.bytes.ini
+        otherCmds: ""
+        proType: SWD
+        resetMode: default
+        runAfterProgram: true
+        speed: 4000
     uploader: OpenOCD

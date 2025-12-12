@@ -9,7 +9,8 @@
 #include "delay.h"
 #include "timer.h"
 #include "adc.h"
-
+#include "semphr.h"
+#include "mpu6050.h"
 
 //#include "Middlewares\State machine\LCD_Interface_C_API.h"
 //FreeRTOS配置为使用静态内存分配时（即 configSUPPORT_STATIC_ALLOCATION 设置为1）
@@ -38,27 +39,31 @@ void TaskDefulat(void const * argument);
 void TaskMatrix_keyboard(void const * argument);
 
 
-
+SemaphoreHandle_t RuningScreenMutex = NULL;
 
 void MX_FREERTOS_Init(void) {
+
     Matrix_keyboard_init();
+    lcd_init();
+    led_init();
+    LED_Init();
+    adc_add_channel(ADC_CHANNEL_5,GPIOA,GPIO_PIN_0);    //PA0
+    adc_init_channels();
+    MPU_Init() ? printf("MPU6050 init suceess!\r\n") : printf("MPU6050 init falied!\r\n");
 
     g_back_color = BLACK;
     g_point_color = WHITE;
-    lcd_init();
-    // LCD_LockScreen();   // 进入锁屏界面
-    led_init();
-    LED_Init();
+    LCD_LockScreen();   // 进入锁屏界面
+    
     Timx_baseStart_Init(TIM6,5000 - 1,8000 - 1);    // TIM6 500ms调用一次
     g_back_color = WHITE;
     g_point_color = BLACK;
     lcd_clear(g_back_color);
     delay_ms(20);
-    lcd_clear(g_back_color);
+
     LCD_StartScreen();    // 上电开机界面
-    adc_add_channel(ADC_CHANNEL_5,GPIOA,GPIO_PIN_0);    //PA0
-    adc_init_channels();
-    delay_ms(20);
+
+
     // 创建队列，用于按键任务和LED任务之间的通信
     // 队列只存放1个字符，新的值会覆盖旧的值
     xKeyQueue = xQueueCreate(1, sizeof(char));
@@ -86,6 +91,14 @@ void TaskDefulat(void const * argument)
     char keyValue = 0;
     portENTER_CRITICAL();       // 进入临界区
     printf("LED Task Started\r\n");
+    if(RuningScreenMutex == NULL)
+    {
+        RuningScreenMutex = xSemaphoreCreateMutex();
+        if(RuningScreenMutex == NULL)
+        {
+            printf("Failed to create RuningScreenMutex\r\n");
+        }
+    }
     portEXIT_CRITICAL();        // 退出临界区
 
     for (;;)
@@ -95,12 +108,17 @@ void TaskDefulat(void const * argument)
         if (xQueueReceive(xKeyQueue, &keyValue, pdMS_TO_TICKS(10)) == pdTRUE) {
             // 成功接收到按键值，可以通过串口打印或其他方式处理
             printf("Received key: %c\r\n", keyValue);
-            LCD_RuningScreen(keyValue);
+            // 尝试获取互斥量，最多等待10ms
+            if(xSemaphoreTake(RuningScreenMutex, pdMS_TO_TICKS(10)) == pdTRUE)
+            {
+                LCD_RuningScreen(keyValue);
+                xSemaphoreGive(RuningScreenMutex);
+            }
         }
 
 
         // 使用vTaskDelay替代delay_ms以符合FreeRTOS规范
-        vTaskDelay(pdMS_TO_TICKS(30));
+        vTaskDelay(pdMS_TO_TICKS(300));
     }
 }
 
@@ -129,6 +147,6 @@ void TaskMatrix_keyboard(void const * argument)
         }
         
         // 使用vTaskDelay替代osDelay以符合FreeRTOS规范
-        vTaskDelay(pdMS_TO_TICKS(20));
+        vTaskDelay(pdMS_TO_TICKS(50));
     }
 }
