@@ -202,7 +202,58 @@ void buzzer_play_wind_rises(void) {
     }
 }
 
+/**
+ * @brief 播放完整版《小星星》
+ */
+void buzzer_play_twinkle_star(void) {
+    // 旋律音符序列 (C大调标准小星星)
+    const uint16_t melody_notes[] = {
+        // 第一段
+        NOTE_C4, NOTE_C4, NOTE_G4, NOTE_G4, NOTE_A4, NOTE_A4, NOTE_G4,
+        NOTE_F4, NOTE_F4, NOTE_E4, NOTE_E4, NOTE_D4, NOTE_D4, NOTE_C4,
+        NOTE_G4, NOTE_G4, NOTE_F4, NOTE_F4, NOTE_E4, NOTE_E4, NOTE_D4,
+        NOTE_G4, NOTE_G4, NOTE_F4, NOTE_F4, NOTE_E4, NOTE_E4, NOTE_D4,
+        // 第二段
+        NOTE_C4, NOTE_C4, NOTE_G4, NOTE_G4, NOTE_A4, NOTE_A4, NOTE_G4,
+        NOTE_F4, NOTE_F4, NOTE_E4, NOTE_E4, NOTE_D4, NOTE_D4, NOTE_C4
+    };
 
+    // 对应时值序列 (四分音符+二分音符)
+    const uint16_t melody_durations[] = {
+        QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, HALF_NOTE,
+        QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, HALF_NOTE,
+        QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, HALF_NOTE,
+        QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, HALF_NOTE,
+        QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, HALF_NOTE,
+        QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, HALF_NOTE
+    };
+
+    // 统一音量设置
+    const uint8_t melody_volumes[] = {
+        5, 5, 5, 5, 5, 5, 5,
+        5, 5, 5, 5, 5, 5, 5,
+        5, 5, 5, 5, 5, 5, 5,
+        5, 5, 5, 5, 5, 5, 5,
+        5, 5, 5, 5, 5, 5, 5,
+        5, 5, 5, 5, 5, 5, 5
+    };
+
+    const uint8_t total_notes = sizeof(melody_notes) / sizeof(melody_notes[0]);
+
+    // 播放旋律
+    for (int i = 0; i < total_notes; i++) {
+        if (melody_notes[i] == 0) {
+            delay_ms(melody_durations[i]);
+        } else {
+            buzzer_play_tone(melody_notes[i], melody_durations[i], melody_volumes[i]);
+        }
+
+        // 音符间间隔
+        if (melody_notes[i] != 0 && i < total_notes - 1 && melody_notes[i + 1] != 0) {
+            delay_ms(30);
+        }
+    }
+}
 
 /**
  * @brief 播放完整的《起风了》全曲 (包含前奏、主歌、副歌、间奏、结尾)
@@ -253,3 +304,7 @@ void buzzer_play_wind_rises_full(void) {
     // 结尾：渐弱结束
     buzzer_play_tone(NOTE_C4, 2000, 3);
 }
+
+
+
+

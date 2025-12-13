@@ -15,6 +15,7 @@ extern "C" {
 void buzzer_init(void);
 void buzzer_play_tone(uint16_t frequency, uint16_t duration, uint8_t volume);
 
+void buzzer_play_twinkle_star(void);
 void buzzer_play_wind_rises(void);
 void buzzer_play_poweron_sound(void);
 

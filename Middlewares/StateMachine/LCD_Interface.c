@@ -47,7 +47,7 @@ void Runing_Page_7(void);
 void Runing_Page_8(void);
 
 static const char *LCD_PageName[8] = {"光照强度值","画图","图片","数字","英文字符"
-    ,"六轴传感器","音乐","自定义"};
+    ,"六轴传感器","音乐：小星星","音乐：起风了"};
 static void (*func_pages[8])(void) = {
     Runing_Page_1,
     Runing_Page_2,
@@ -388,7 +388,21 @@ void LCD_RuningScreen(uint32_t keyValue)
     }
     else
     {
-        lCD_RuningErrorStaticScreen();
+        if(page == strlen(Student_ID))
+        {
+            page = 1;
+            LED_func = NULL;    //先暂停子任务
+            lcd_init();
+            lcd_clear(g_back_color);
+            delay_ms(20);
+            LCD_RuningPagePrintf();
+            lcd_clear(g_back_color);
+            delay_ms(20);
+            LED_func = func_pages[page];
+        }
+        else{
+            lCD_RuningErrorStaticScreen();
+        }
     }
 }
 
@@ -417,7 +431,6 @@ void Runing_Page_1(void)
 
 }
 
-
 void Runing_Page_2(void)
 {
     //printf("Runing_Page_2 runing\r\n");
@@ -438,7 +451,6 @@ void Runing_Page_2(void)
     lcd_draw_3d_cube(65, 95, 50, x, y, z, RED);
 }
 
-
 void Runing_Page_3(void)
 {
     //lcd_init();
@@ -455,7 +467,6 @@ void Runing_Page_3(void)
         delay_ms(200);
     }
 }
-
 
 void Runing_Page_4(void)
 {
@@ -527,19 +538,16 @@ void Runing_Page_6(void)
     delay_ms(500);
 }
 
-
-
 void Runing_Page_7(void)
 {
     lCD_RuningPageStaticScreen();
-    buzzer_play_wind_rises();
+    buzzer_play_twinkle_star();
 }
-
 
 void Runing_Page_8(void)
 {
     lCD_RuningPageStaticScreen();
-    
+    buzzer_play_wind_rises();
 }
 
 
