@@ -222,7 +222,7 @@ void atim1_npwmStart_init(uint16_t arr, uint16_t psc)
     timer_configs[TIM1_KEY].timx_Handles.Init.RepetitionCounter = 0;                 /* 重复计数器初始值 */
     HAL_TIM_PWM_Init(&timer_configs[TIM1_KEY].timx_Handles);                         /* 初始化PWM */
 
-    gpio_init_struct.Pin = GPIO_PIN_8;                                 /* 通道y的CPIO口 */
+    gpio_init_struct.Pin = GPIO_PIN_11;                                 /* 通道4的GPIO口PA11 */
     gpio_init_struct.Mode = GPIO_MODE_AF_PP;                           /* 复用推完输出 */
     gpio_init_struct.Pull = GPIO_PULLUP;                               /* 上拉 */
     gpio_init_struct.Speed = GPIO_SPEED_FREQ_HIGH;                     /* 高速 */
@@ -230,16 +230,17 @@ void atim1_npwmStart_init(uint16_t arr, uint16_t psc)
     HAL_GPIO_Init(GPIOA, &gpio_init_struct);
 
     timx_oc_npwm_chy.OCMode = TIM_OCMODE_PWM1;                         /* 模式选择PWM 1*/
-    timx_oc_npwm_chy.Pulse = arr / 2;                                  /* 设置比较值,此值用来确定占空比 */
-                                                                       /* 这里默认设置比较值为自动重装载值的一半,即占空比为50% */
+    timx_oc_npwm_chy.Pulse = 0;                                        /* 设置比较值为0，确保初始不输出 */
     timx_oc_npwm_chy.OCPolarity = TIM_OCPOLARITY_HIGH;                 /* 输出比较极性为高 */
-    HAL_TIM_PWM_ConfigChannel(&timer_configs[TIM1_KEY].timx_Handles, &timx_oc_npwm_chy, TIM_CHANNEL_1); /* 配置TIM1通道y */
+    timx_oc_npwm_chy.OCFastMode = TIM_OCFAST_DISABLE;                  /* 关闭快速模式 */
+    HAL_TIM_PWM_ConfigChannel(&timer_configs[TIM1_KEY].timx_Handles, &timx_oc_npwm_chy, TIM_CHANNEL_4); /* 配置TIM1通道4 */
 
-    HAL_NVIC_SetPriority(TIM1_UP_TIM16_IRQn, 1, 3);                   /* 设置中断优先级，抢占优先级1，子优先级3 */
-    HAL_NVIC_EnableIRQ(TIM1_UP_TIM16_IRQn);                           /* 开启TIM1中断 */
-
-    __HAL_TIM_ENABLE_IT(&timer_configs[TIM1_KEY].timx_Handles, TIM_IT_UPDATE);       /* 允许更新中断 */
-    HAL_TIM_PWM_Start(&timer_configs[TIM1_KEY].timx_Handles, TIM_CHANNEL_1);    /* 开启对应PWM通道 */
+    /* 高级定时器需要使能主输出才能输出PWM */
+    HAL_TIMEx_PWMN_Start(&timer_configs[TIM1_KEY].timx_Handles, TIM_CHANNEL_4);     /* 使能TIM1通道4的PWM输出 */
+    HAL_TIM_PWM_Start(&timer_configs[TIM1_KEY].timx_Handles, TIM_CHANNEL_4);        /* 开启对应PWM通道 */
+    
+    /* 使能高级定时器主输出 */
+    __HAL_TIM_MOE_ENABLE(&timer_configs[TIM1_KEY].timx_Handles);
 }
 
 /**
@@ -270,9 +271,9 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim)
         __HAL_RCC_TIM1_CLK_ENABLE();                                   /* 使能TIM1时钟 */
         __HAL_RCC_GPIOA_CLK_ENABLE();                                  /* 使能GPIOA时钟 */
 
-        gpio_init_struct.Pin = GPIO_PIN_8;                             /* PA8 */
+        gpio_init_struct.Pin = GPIO_PIN_11;                            /* PA11 */
         gpio_init_struct.Mode = GPIO_MODE_AF_PP;                       /* 复用推挽输出 */
-        gpio_init_struct.Pull = GPIO_NOPULL;                           /* 无上下拉 */
+        gpio_init_struct.Pull = GPIO_PULLUP;                           /* 上拉 */
         gpio_init_struct.Speed = GPIO_SPEED_FREQ_HIGH;                 /* 高速 */
         gpio_init_struct.Alternate = GPIO_AF1_TIM1;
         HAL_GPIO_Init(GPIOA, &gpio_init_struct);

@@ -14,6 +14,7 @@
 #include "semphr.h" 
 #include "ImageData.h"
 #include "mpu6050.h"
+#include "buzzer.h"
 
 #define Max_ID_Len 16
 #define USART_BUFFER_SIZE 30
@@ -46,7 +47,7 @@ void Runing_Page_7(void);
 void Runing_Page_8(void);
 
 static const char *LCD_PageName[8] = {"光照强度值","画图","图片","数字","英文字符"
-    ,"六轴传感器","自定义","自定义"};
+    ,"六轴传感器","音乐","自定义"};
 static void (*func_pages[8])(void) = {
     Runing_Page_1,
     Runing_Page_2,
@@ -531,7 +532,7 @@ void Runing_Page_6(void)
 void Runing_Page_7(void)
 {
     lCD_RuningPageStaticScreen();
-    
+    buzzer_play_wind_rises();
 }
 
 

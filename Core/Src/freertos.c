@@ -11,6 +11,7 @@
 #include "adc.h"
 #include "semphr.h"
 #include "mpu6050.h"
+#include "buzzer.h"
 
 //#include "Middlewares\State machine\LCD_Interface_C_API.h"
 //FreeRTOS配置为使用静态内存分配时（即 configSUPPORT_STATIC_ALLOCATION 设置为1）
@@ -62,7 +63,10 @@ void MX_FREERTOS_Init(void) {
     delay_ms(20);
 
     LCD_StartScreen();    // 上电开机界面
-
+    // 初始化蜂鸣器
+    buzzer_init();
+    // 播放开机音效
+    buzzer_play_poweron_sound();
 
     // 创建队列，用于按键任务和LED任务之间的通信
     // 队列只存放1个字符，新的值会覆盖旧的值

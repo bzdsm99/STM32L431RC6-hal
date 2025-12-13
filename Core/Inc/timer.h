@@ -54,7 +54,6 @@ void Timx_ICStart_Init(TIM_TypeDef *Timx, uint8_t channel_count, ...);
 
 void timx_pwmStart_init(TIM_TypeDef *Timx, uint16_t arr, uint16_t psc,
     uint8_t channel_count, ...);
-void timx_pwmSetFrequency(TIM_TypeDef *Timx, uint16_t arr, uint16_t psc);
 
 #ifdef TIM1_NPWM_USE
     void atim1_npwmStart_init(uint16_t arr, uint16_t psc);

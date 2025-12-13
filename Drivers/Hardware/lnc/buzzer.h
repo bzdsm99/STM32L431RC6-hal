@@ -13,6 +13,10 @@ extern "C" {
 
 // 蜂鸣器初始化
 void buzzer_init(void);
+void buzzer_play_tone(uint16_t frequency, uint16_t duration, uint8_t volume);
+
+void buzzer_play_wind_rises(void);
+void buzzer_play_poweron_sound(void);
 
 
 #ifdef __cplusplus
