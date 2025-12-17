@@ -85,7 +85,7 @@ void MX_FREERTOS_Init(void) {
     taskMatrix_keyboardHandle = osThreadCreate(osThread(Matrix_keyboard), NULL);
 
     // 创建LCD子任务
-    osThreadDef(LCD_func,TaskLCDRunfunc, osPriorityNormal, 0, 256);
+    osThreadDef(LCD_func,TaskLCDRunfunc, osPriorityHigh, 0, 256);
     taskLCDRunfuncHandle = osThreadCreate(osThread(LCD_func), NULL);
 }
 
@@ -154,3 +154,8 @@ void TaskMatrix_keyboard(void const * argument)
         vTaskDelay(pdMS_TO_TICKS(50));
     }
 }
+
+
+
+
+
