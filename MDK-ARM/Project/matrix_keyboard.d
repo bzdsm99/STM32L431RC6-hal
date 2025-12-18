@@ -1,6 +1,6 @@
 project\matrix_keyboard.o: ..\Drivers\Hardware\Src\Matrix_keyboard.c
 project\matrix_keyboard.o: ..\Drivers\Hardware\lnc\Matrix_keyboard.h
-project\matrix_keyboard.o: ../Core/Inc/borad.h
+project\matrix_keyboard.o: ..\Drivers\Hardware\lnc\borad.h
 project\matrix_keyboard.o: ../Core/Inc/gpio.h
 project\matrix_keyboard.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h
 project\matrix_keyboard.o: ../Core/Inc/stm32l4xx_hal_conf.h

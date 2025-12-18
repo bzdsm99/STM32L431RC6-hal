@@ -59,11 +59,8 @@ static void (*func_pages[8])(void) = {
     Runing_Page_8
 };
 
-
-
 static void (*LED_blink)(void) = NULL;
 static void (*LED_func)(void) = NULL;
-
 
 SemaphoreHandle_t xLCDFuncMutex = NULL;
 

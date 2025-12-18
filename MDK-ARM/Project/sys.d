@@ -43,3 +43,4 @@ project\sys.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h
 project\sys.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h
 project\sys.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h
 project\sys.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_wwdg.h
+project\sys.o: D:\Program Files\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h

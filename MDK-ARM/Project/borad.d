@@ -1,5 +1,5 @@
-project\borad.o: ..\Core\Src\borad.c
-project\borad.o: ../Core/Inc/borad.h
+project\borad.o: ..\Drivers\Hardware\Src\borad.c
+project\borad.o: ..\Drivers\Hardware\lnc\borad.h
 project\borad.o: ../Core/Inc/gpio.h
 project\borad.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h
 project\borad.o: ../Core/Inc/stm32l4xx_hal_conf.h

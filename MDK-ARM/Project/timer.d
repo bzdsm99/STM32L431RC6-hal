@@ -43,7 +43,7 @@ project\timer.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h
 project\timer.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h
 project\timer.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h
 project\timer.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_wwdg.h
-project\timer.o: ../Core/Inc/borad.h
+project\timer.o: ..\Drivers\Hardware\lnc\borad.h
 project\timer.o: ../Core/Inc/gpio.h
 project\timer.o: ..\Drivers\SYSTEM\Inc\usart.h
 project\timer.o: D:\Program Files\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h

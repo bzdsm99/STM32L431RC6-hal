@@ -44,6 +44,7 @@ project\rng.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h
 project\rng.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h
 project\rng.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h
 project\rng.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_wwdg.h
+project\rng.o: D:\Program Files\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 project\rng.o: ..\Drivers\SYSTEM\Inc\delay.h
 project\rng.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
 project\rng.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h

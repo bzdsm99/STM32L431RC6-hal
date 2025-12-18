@@ -44,3 +44,4 @@ project\wdg.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h
 project\wdg.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_wwdg.h
 project\wdg.o: ..\Drivers\SYSTEM\Inc\wdg.h
 project\wdg.o: ..\Drivers\SYSTEM\Inc\sys.h
+project\wdg.o: D:\Program Files\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h

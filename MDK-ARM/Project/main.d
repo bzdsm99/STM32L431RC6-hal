@@ -15,7 +15,7 @@ project\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h
 project\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
 project\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 project\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
-project\main.o: ../Core/Inc/gpio.h
+project\main.o: ..\Drivers\SYSTEM\Inc\sys.h
 project\main.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h
 project\main.o: ../Core/Inc/stm32l4xx_hal_conf.h
 project\main.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h
@@ -57,7 +57,9 @@ project\main.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h
 project\main.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h
 project\main.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h
 project\main.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_wwdg.h
-project\main.o: ..\Drivers\Hardware\lnc\lcd.h
+project\main.o: D:\Program Files\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+project\main.o: ..\Drivers\SYSTEM\Inc\usart.h
+project\main.o: D:\Program Files\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+project\main.o: ..\Drivers\Hardware\lnc\LCD.h
 project\main.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi.h
 project\main.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi_ex.h
-project\main.o: ..\Drivers\SYSTEM\Inc\sys.h

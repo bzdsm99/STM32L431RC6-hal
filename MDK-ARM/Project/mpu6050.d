@@ -59,4 +59,6 @@ project\mpu6050.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h
 project\mpu6050.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
 project\mpu6050.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 project\mpu6050.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
+project\mpu6050.o: ..\Drivers\SYSTEM\Inc\usart.h
+project\mpu6050.o: D:\Program Files\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 project\mpu6050.o: D:\Program Files\Keil_v5\ARM\ARMCC\Bin\..\include\math.h

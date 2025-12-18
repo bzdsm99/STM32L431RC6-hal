@@ -1,0 +1,47 @@
+project\imagedata.o: ..\Middlewares\StateMachine\ImageData.c
+project\imagedata.o: ..\Middlewares\StateMachine\ImageData.h
+project\imagedata.o: ..\Drivers\SYSTEM\Inc\sys.h
+project\imagedata.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h
+project\imagedata.o: ../Core/Inc/stm32l4xx_hal_conf.h
+project\imagedata.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h
+project\imagedata.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_def.h
+project\imagedata.o: ../Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l4xx.h
+project\imagedata.o: ../Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l431xx.h
+project\imagedata.o: ../Drivers/CMSIS/Include/core_cm4.h
+project\imagedata.o: D:\Program Files\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+project\imagedata.o: ../Drivers/CMSIS/Include/cmsis_version.h
+project\imagedata.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
+project\imagedata.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
+project\imagedata.o: ../Drivers/CMSIS/Include/mpu_armv7.h
+project\imagedata.o: ../Drivers/CMSIS/Device/ST/STM32L4xx/Include/system_stm32l4xx.h
+project\imagedata.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h
+project\imagedata.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
+project\imagedata.o: D:\Program Files\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+project\imagedata.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc_ex.h
+project\imagedata.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_gpio.h
+project\imagedata.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_gpio_ex.h
+project\imagedata.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_dma.h
+project\imagedata.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_cortex.h
+project\imagedata.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_adc.h
+project\imagedata.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_ll_adc.h
+project\imagedata.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_adc_ex.h
+project\imagedata.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_dac.h
+project\imagedata.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_dac_ex.h
+project\imagedata.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_exti.h
+project\imagedata.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_flash.h
+project\imagedata.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_flash_ex.h
+project\imagedata.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_flash_ramfunc.h
+project\imagedata.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_i2c.h
+project\imagedata.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_i2c_ex.h
+project\imagedata.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_iwdg.h
+project\imagedata.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_pwr.h
+project\imagedata.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_pwr_ex.h
+project\imagedata.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rng.h
+project\imagedata.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rtc.h
+project\imagedata.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rtc_ex.h
+project\imagedata.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim.h
+project\imagedata.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h
+project\imagedata.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h
+project\imagedata.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h
+project\imagedata.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_wwdg.h
+project\imagedata.o: D:\Program Files\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h

@@ -43,7 +43,8 @@ project\usart.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h
 project\usart.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h
 project\usart.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h
 project\usart.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_wwdg.h
+project\usart.o: D:\Program Files\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 project\usart.o: ..\Drivers\SYSTEM\Inc\usart.h
 project\usart.o: D:\Program Files\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-project\usart.o: D:\Program Files\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 project\usart.o: ../Core/Inc/dma.h
+project\usart.o: D:\Program Files\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

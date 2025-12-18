@@ -332,7 +332,7 @@
               <MiscControls>--no-multibyte-chars</MiscControls>
               <Define>USE_HAL_DRIVER,STM32L431xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32L4xx_HAL_Driver/Inc;../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../Drivers/CMSIS/Device/ST/STM32L4xx/Include;../Drivers/CMSIS/Include;..\Core\Inc;..\Core\Src;..\Core;..\Drivers\Hardware\lnc;..\Drivers\Hardware\Src;..\Drivers\SYSTEM\Inc;..\Drivers\SYSTEM\Src</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32L4xx_HAL_Driver/Inc;../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../Drivers/CMSIS/Device/ST/STM32L4xx/Include;../Drivers/CMSIS/Include;..\Core\Inc;..\Core\Src;..\Core;..\Drivers\Hardware\lnc;..\Drivers\Hardware\Src;..\Drivers\SYSTEM\Inc;..\Drivers\SYSTEM\Src;..\Middlewares\StateMachine</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -386,11 +386,6 @@
           <GroupName>Application/User/Core</GroupName>
           <Files>
             <File>
-              <FileName>gpio.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Core/Src/gpio.c</FilePath>
-            </File>
-            <File>
               <FileName>stm32l4xx_it.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/Src/stm32l4xx_it.c</FilePath>
@@ -409,11 +404,6 @@
               <FileName>adc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\Src\adc.c</FilePath>
-            </File>
-            <File>
-              <FileName>borad.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\borad.c</FilePath>
             </File>
             <File>
               <FileName>dac.c</FileName>
@@ -451,14 +441,24 @@
               <FilePath>..\Core\Src\timer.c</FilePath>
             </File>
             <File>
-              <FileName>freertos.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\freertos.c</FilePath>
-            </File>
-            <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>freertos.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\freertos.c</FilePath>
+            </File>
+            <File>
+              <FileName>ImageData.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\StateMachine\ImageData.c</FilePath>
+            </File>
+            <File>
+              <FileName>LCD_Interface.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\StateMachine\LCD_Interface.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -509,6 +509,16 @@
               <FileName>OLED_Data.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Drivers\Hardware\Src\OLED_Data.c</FilePath>
+            </File>
+            <File>
+              <FileName>borad.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\Hardware\Src\borad.c</FilePath>
+            </File>
+            <File>
+              <FileName>buzzer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\Hardware\Src\buzzer.c</FilePath>
             </File>
           </Files>
         </Group>

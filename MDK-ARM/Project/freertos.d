@@ -1,4 +1,4 @@
-project\freertos.o: ..\Core\freertos.c
+project\freertos.o: ..\Core\Src\freertos.c
 project\freertos.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h
 project\freertos.o: ../Core/Inc/stm32l4xx_hal_conf.h
 project\freertos.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h
@@ -56,8 +56,19 @@ project\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h
 project\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
 project\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 project\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
-project\freertos.o: ..\Drivers\SYSTEM\Inc\delay.h
-project\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
+project\freertos.o: ..\Middlewares\StateMachine\LCD_Interface.h
 project\freertos.o: ..\Drivers\Hardware\lnc\LCD.h
 project\freertos.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi.h
 project\freertos.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi_ex.h
+project\freertos.o: ..\Drivers\Hardware\lnc\Matrix_keyboard.h
+project\freertos.o: ..\Drivers\Hardware\lnc\borad.h
+project\freertos.o: ../Core/Inc/gpio.h
+project\freertos.o: ..\Drivers\SYSTEM\Inc\usart.h
+project\freertos.o: D:\Program Files\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+project\freertos.o: D:\Program Files\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+project\freertos.o: ..\Drivers\SYSTEM\Inc\delay.h
+project\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
+project\freertos.o: ../Core/Inc/timer.h
+project\freertos.o: ../Core/Inc/adc.h
+project\freertos.o: ..\Drivers\Hardware\lnc\mpu6050.h
+project\freertos.o: ..\Drivers\Hardware\lnc\buzzer.h
